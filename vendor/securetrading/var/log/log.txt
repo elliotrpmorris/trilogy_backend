@@ -1,0 +1,76 @@
+07-12-2021 03:16:37 CET - DEBUG - A569adghr - Setting requestreference.
+07-12-2021 03:16:37 CET - DEBUG - A569adghr - Setting sitereference.
+07-12-2021 03:16:37 CET - DEBUG - A569adghr - Setting requesttypedescriptions.
+07-12-2021 03:16:37 CET - DEBUG - A569adghr - Setting accounttypedescription.
+07-12-2021 03:16:37 CET - DEBUG - A569adghr - Setting currencyiso3a.
+07-12-2021 03:16:37 CET - DEBUG - A569adghr - Setting baseamount.
+07-12-2021 03:16:37 CET - DEBUG - A569adghr - Setting orderreference.
+07-12-2021 03:16:37 CET - DEBUG - A569adghr - Setting pan.
+07-12-2021 03:16:37 CET - DEBUG - A569adghr - Setting expirydate.
+07-12-2021 03:16:37 CET - DEBUG - A569adghr - Setting securitycode.
+07-12-2021 03:16:37 CET - INFO - A569adghr - Starting request.
+07-12-2021 03:16:37 CET - DEBUG - A569adghr - Starting encoding.
+07-12-2021 03:16:37 CET - DEBUG - A569adghr - Instance of \Securetrading\Stpp\JsonInterface\Request detected.
+07-12-2021 03:16:37 CET - DEBUG - A569adghr - Finished encoding.
+07-12-2021 03:16:37 CET - INFO - A569adghr - Beginning HTTP request to https://webservices.securetrading.net/json/.
+07-12-2021 03:16:38 CET - INFO - A569adghr - Finished HTTP request to https://webservices.securetrading.net/json/.
+07-12-2021 03:16:38 CET - DEBUG - A569adghr - Starting decoding.
+07-12-2021 03:16:38 CET - DEBUG - A569adghr - Setting requestreference.
+07-12-2021 03:16:38 CET - DEBUG - A569adghr - Setting version.
+07-12-2021 03:16:38 CET - DEBUG - A569adghr - Setting responses.
+07-12-2021 03:16:38 CET - DEBUG - A569adghr - Finished decoding.
+07-12-2021 03:16:38 CET - INFO - A569adghr - Finished request.
+07-12-2021 03:42:50 CET - DEBUG - A578ekpuw - Setting requestreference.
+07-12-2021 03:42:50 CET - DEBUG - A578ekpuw - Setting sitereference.
+07-12-2021 03:42:50 CET - DEBUG - A578ekpuw - Setting requesttypedescriptions.
+07-12-2021 03:42:50 CET - DEBUG - A578ekpuw - Setting orderreference.
+07-12-2021 03:42:50 CET - DEBUG - A578ekpuw - Setting parenttransactionreference.
+07-12-2021 03:42:50 CET - DEBUG - A578ekpuw - Setting threedresponse.
+07-12-2021 03:42:50 CET - INFO - A578ekpuw - Starting request.
+07-12-2021 03:42:50 CET - DEBUG - A578ekpuw - Starting encoding.
+07-12-2021 03:42:50 CET - DEBUG - A578ekpuw - Instance of \Securetrading\Stpp\JsonInterface\Request detected.
+07-12-2021 03:42:50 CET - DEBUG - A578ekpuw - Finished encoding.
+07-12-2021 03:42:50 CET - INFO - A578ekpuw - Beginning HTTP request to https://webservices.securetrading.net/json/.
+07-12-2021 03:42:51 CET - INFO - A578ekpuw - Finished HTTP request to https://webservices.securetrading.net/json/.
+07-12-2021 03:42:51 CET - DEBUG - A578ekpuw - Starting decoding.
+07-12-2021 03:42:51 CET - DEBUG - A578ekpuw - Setting requestreference.
+07-12-2021 03:42:51 CET - DEBUG - A578ekpuw - Setting version.
+07-12-2021 03:42:51 CET - DEBUG - A578ekpuw - Setting responses.
+07-12-2021 03:42:51 CET - DEBUG - A578ekpuw - Finished decoding.
+07-12-2021 03:42:51 CET - INFO - A578ekpuw - Finished request.
+07-12-2021 03:45:59 CET - DEBUG - A018cgkmp - Setting requestreference.
+07-12-2021 03:45:59 CET - DEBUG - A018cgkmp - Setting sitereference.
+07-12-2021 03:45:59 CET - DEBUG - A018cgkmp - Setting requesttypedescriptions.
+07-12-2021 03:45:59 CET - DEBUG - A018cgkmp - Setting orderreference.
+07-12-2021 03:45:59 CET - DEBUG - A018cgkmp - Setting parenttransactionreference.
+07-12-2021 03:45:59 CET - DEBUG - A018cgkmp - Setting threedresponse.
+07-12-2021 03:45:59 CET - INFO - A018cgkmp - Starting request.
+07-12-2021 03:45:59 CET - DEBUG - A018cgkmp - Starting encoding.
+07-12-2021 03:45:59 CET - DEBUG - A018cgkmp - Instance of \Securetrading\Stpp\JsonInterface\Request detected.
+07-12-2021 03:45:59 CET - DEBUG - A018cgkmp - Finished encoding.
+07-12-2021 03:45:59 CET - INFO - A018cgkmp - Beginning HTTP request to https://webservices.securetrading.net/json/.
+07-12-2021 03:46:00 CET - INFO - A018cgkmp - Finished HTTP request to https://webservices.securetrading.net/json/.
+07-12-2021 03:46:00 CET - DEBUG - A018cgkmp - Starting decoding.
+07-12-2021 03:46:00 CET - DEBUG - A018cgkmp - Setting requestreference.
+07-12-2021 03:46:00 CET - DEBUG - A018cgkmp - Setting version.
+07-12-2021 03:46:00 CET - DEBUG - A018cgkmp - Setting responses.
+07-12-2021 03:46:00 CET - DEBUG - A018cgkmp - Finished decoding.
+07-12-2021 03:46:00 CET - INFO - A018cgkmp - Finished request.
+07-12-2021 03:46:18 CET - DEBUG - A459befmq - Setting requestreference.
+07-12-2021 03:46:18 CET - DEBUG - A459befmq - Setting sitereference.
+07-12-2021 03:46:18 CET - DEBUG - A459befmq - Setting requesttypedescriptions.
+07-12-2021 03:46:18 CET - DEBUG - A459befmq - Setting orderreference.
+07-12-2021 03:46:18 CET - DEBUG - A459befmq - Setting parenttransactionreference.
+07-12-2021 03:46:18 CET - DEBUG - A459befmq - Setting threedresponse.
+07-12-2021 03:46:18 CET - INFO - A459befmq - Starting request.
+07-12-2021 03:46:18 CET - DEBUG - A459befmq - Starting encoding.
+07-12-2021 03:46:18 CET - DEBUG - A459befmq - Instance of \Securetrading\Stpp\JsonInterface\Request detected.
+07-12-2021 03:46:18 CET - DEBUG - A459befmq - Finished encoding.
+07-12-2021 03:46:18 CET - INFO - A459befmq - Beginning HTTP request to https://webservices.securetrading.net/json/.
+07-12-2021 03:46:19 CET - INFO - A459befmq - Finished HTTP request to https://webservices.securetrading.net/json/.
+07-12-2021 03:46:19 CET - DEBUG - A459befmq - Starting decoding.
+07-12-2021 03:46:19 CET - DEBUG - A459befmq - Setting requestreference.
+07-12-2021 03:46:19 CET - DEBUG - A459befmq - Setting version.
+07-12-2021 03:46:19 CET - DEBUG - A459befmq - Setting responses.
+07-12-2021 03:46:19 CET - DEBUG - A459befmq - Finished decoding.
+07-12-2021 03:46:19 CET - INFO - A459befmq - Finished request.

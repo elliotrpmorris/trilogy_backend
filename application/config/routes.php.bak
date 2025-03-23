@@ -1,0 +1,244 @@
+<?php
+
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+
+
+/*
+
+| -------------------------------------------------------------------------
+
+| URI ROUTING
+
+| -------------------------------------------------------------------------
+
+| This file lets you re-map URI requests to specific controller functions.
+
+|
+
+| Typically there is a one-to-one relationship between a URL string
+
+| and its corresponding controller class/method. The segments in a
+
+| URL normally follow this pattern:
+
+|
+
+|	example.com/class/method/id/
+
+|
+
+| In some instances, however, you may want to remap this relationship
+
+| so that a different class/function is called than the one
+
+| corresponding to the URL.
+
+|
+
+| Please see the user guide for complete details:
+
+|
+
+|	https://codeigniter.com/user_guide/general/routing.html
+
+|
+
+| -------------------------------------------------------------------------
+
+| RESERVED ROUTES
+
+| -------------------------------------------------------------------------
+
+|
+
+| There are three reserved routes:
+
+|
+
+|	$route['default_controller'] = 'welcome';
+
+|
+
+| This route indicates which controller class should be loaded if the
+
+| URI contains no data. In the above example, the "welcome" class
+
+| would be loaded.
+
+|
+
+|	$route['404_override'] = 'errors/page_missing';
+
+|
+
+| This route will tell the Router which controller/method to use if those
+
+| provided in the URL cannot be matched to a valid route.
+
+|
+
+|	$route['translate_uri_dashes'] = FALSE;
+
+|
+
+| This is not exactly a route, but allows you to automatically route
+
+| controller and method names that contain dashes. '-' isn't a valid
+
+| class or method name character, so it requires translation.
+
+| When you set this option to TRUE, it will replace ALL dashes in the
+
+| controller and method URI segments.
+
+|
+
+| Examples:	my-controller/index	-> my_controller/index
+
+|		my-controller/my-method	-> my_controller/my_method
+
+*/
+
+$route['default_controller'] = 'home';
+
+$route['404_override'] = '';
+
+$route['translate_uri_dashes'] = FALSE;
+
+/* Home Routes */
+
+$route['privacy-policy'] = 'home/privacypolicy';
+$route['6weeks'] = 'home/sixweeks';
+$route['lifestyle'] = 'home/lifestyle';
+$route['refund-policy'] = 'home/refundpolicy';
+$route['terms-conditions'] = 'home/termsconditions';
+$route['join-now'] = 'home/joinnow';
+$route['joinnowsubmit'] = 'home/joinnowsubmit';
+$route['paymenthandleronetoone'] = 'home/paymenthandleronetoone';
+$route['thank-you'] = 'home/thankyoupage';
+$route['buy-now-success'] = 'home/buyNowSuccess';
+$route['success-payment'] = 'home/successpaymentpage';
+$route['cancel-payment'] = 'home/cancelpaymentpage';
+$route['join-now-6weeks'] = 'home/joinnowweeks';
+$route['joinnow6weeksubmit'] = 'home/joinnow6weeksubmit';
+$route['paymenthandler'] = 'home/paymenthandler';
+$route['know-more'] = 'home/knowmore';
+$route['validateCouponode'] = 'home/validateCouponode';
+$route['buy-now/soft-copy'] = 'home/buyNow/1';
+$route['buy-now/hard-copy'] = 'home/buyNow/2';
+$route['buynowsubmit'] = 'home/buynowsubmit';
+$route['buynowprocess'] = 'home/buynowprocess';
+$route['paymenthandlerbuynow'] = 'home/paymenthandlerbuynow';
+
+$route['profile'] = 'profile/index';
+$route['profiledatasubmit'] = 'profile/updateprofiledata';
+$route['login'] = 'profile/login';
+$route['forgot-password'] = 'profile/forgotpassword';
+$route['forgetpasswordsubmit'] = 'profile/forgetpassworddatasubmit';
+$route['reset-pasword'] = 'profile/resetpassword';
+$route['reset-pasword/(:any)'] = 'profile/resetpassword/$1';
+$route['resetpasswoedsubmit'] = 'profile/resetpasswoeddatasubmit';
+$route['uploadprofileimage'] = 'profile/uploadprofileimagedata';
+$route['sign-up'] = 'profile/registration';
+$route['registrationsubmit'] = 'profile/registrationsubmit';
+$route['loginsubmit'] = 'profile/loginsubmit';
+$route['logout'] = 'profile/logout';
+$route['plans'] = 'profile/plans';
+$route['my-billing'] = 'profile/billing';
+$route['change-password'] = 'profile/changepassword';
+$route['updatepassworddata'] = 'profile/updatepassworddata';
+
+require_once( BASEPATH .'database/DB.php');
+$db =& DB();
+
+/* ARTIST ROUTES GALLERY */
+$query = $db->query("SELECT `generated_link`, `location_name` FROM `locations` WHERE 1 ORDER BY `id` asc");
+foreach ($query->result() as $row){
+	$route[ $row->generated_link ] = 'home/joinnowweeks/'.$row->location_name;
+}
+
+
+// Admin Routes
+
+$route['admin'] = 'admin/login';
+
+$route['admin/dashboard'] = 'admin/dashboard';
+
+
+
+/* Master Data */
+
+$route['admin/packages'] = 'admincontrl/Packages/index';
+$route['admin/packages/updatepackages/(:any)'] = 'admincontrl/Packages/updatePackageData/$1';
+$route['admin/location'] = 'admincontrl/Location/index';
+$route['admin/weekdrop'] = 'admincontrl/Weekdrop/index';
+$route['admin/batch'] = 'admincontrl/Weekdrop/viewBatch';
+$route['admin/mealtype'] = 'admincontrl/meals/viewMealType';
+$route['admin/foodtype'] = 'admincontrl/food/viewFoodType';
+$route['admin/nutrition'] = 'admincontrl/nutrition/index';
+$route['admin/meals'] = 'admincontrl/mealmaster/index';
+$route['admin/meals/addNewItem'] = 'admincontrl/mealmaster/addNewMeals';
+$route['admin/meals/updateMealItem/(:any)'] = 'admincontrl/mealmaster/updateMeals/$1';
+
+$route['admin/coupon'] = 'admincontrl/coupon/index';
+
+$route['admin/users/(:any)'] = 'admincontrl/users/viewUser/$1';
+$route['admin/users/addmeal/(:any)/(:any)'] = 'admincontrl/users/addUserPackageMealByUserId/$1/$2';
+$route['admin/users/updatemeal/(:any)/(:any)/(:any)'] = 'admincontrl/users/updateOnoetoOneMealByUserId/$1/$2/$3';
+$route['admin/users/viewMeal/(:any)/(:any)'] = 'admincontrl/users/viewUserMeal/$1/$2';
+$route['admin/users/viewMealOnetoOne/(:any)/(:any)'] = 'admincontrl/users/viewUserMealOne/$1/$2';
+
+$route['admin/callback/availableslots'] = 'admincontrl/callback/index';
+$route['admin/callback/viewrequest'] = 'admincontrl/callback/viewrequests';
+
+$route['admin/workout/musclegroup'] = 'admincontrl/Workoutmaster/musclegroup';
+$route['admin/workout/workouttypes'] = 'admincontrl/Workoutmaster/workouttypes';
+$route['admin/workout/equipments'] = 'admincontrl/Workoutmaster/workoutequipments';
+$route['admin/workout/routine'] = 'admincontrl/Workout/workoutroutine';
+$route['admin/workout/addroutine'] = 'admincontrl/Workout/workoutAddUpdateRoutine';
+$route['admin/workout/updateroutine/(:any)'] = 'admincontrl/Workout/workoutAddUpdateRoutine/$1';
+$route['admin/workout'] = 'admincontrl/Workout/index';
+$route['admin/workout/addnewexcercise'] = 'admincontrl/Workout/addUpdateExcercise';
+$route['admin/workout/updateexcercise/(:any)'] = 'admincontrl/Workout/addUpdateExcercise/$1';
+
+$route['admin/users/viewWorkout/(:any)/(:any)'] = 'admincontrl/users/viewUserWorkout/$1/$2';
+$route['admin/users/addworkout/(:any)/(:any)'] = 'admincontrl/users/addUserPackageWorkoutByUserId/$1/$2';
+$route['admin/users/viewWorkoutOnetoOne/(:any)/(:any)'] = 'admincontrl/users/viewUserWorkoutOne/$1/$2';
+$route['admin/users/updateworkout/(:any)/(:any)/(:any)'] = 'admincontrl/users/updateOnoetoOneWorkoutByUserId/$1/$2/$3';
+$route['admin/orders'] = 'admincontrl/users/orderHistory';
+
+$route['admin/trainers'] = 'admincontrl/trainers/index';
+$route['admin/trainers/addNewItem'] = 'admincontrl/trainers/addNewTrainer';
+$route['admin/trainers/updateTrainer/(:any)'] = 'admincontrl/trainers/addNewTrainer/$1';
+$route['admin/trainers/routine'] = 'admincontrl/trainers/workoutRoutine';
+$route['admin/trainer/addroutine'] = 'admincontrl/trainers/workoutAddUpdateRoutine';
+$route['admin/trainers/updateroutine/(:any)'] = 'admincontrl/trainers/workoutAddUpdateRoutine/$1';
+$route['admin/trainers/workout'] = 'admincontrl/trainers/workout';
+$route['admin/trainers/addnewexcercise'] = 'admincontrl/trainers/addUpdateExcercise';
+$route['admin/trainers/updateexcercise/(:any)'] = 'admincontrl/trainers/addUpdateExcercise/$1';
+
+/* $route['admin/meal_tags_master'] = 'admin/meal_tags_master';
+
+
+
+$route['admin/ingredients'] = 'admin/ingredients';
+
+$route['admin/meals'] = 'admin/meals';
+
+$route['admin/exercises'] = 'admin/exercises';
+
+$route['admin/workouts'] = 'admin/workouts';
+
+$route['admin/plans'] = 'admin/plans'; */
+
+
+
+
+
+/* signout */
+
+$route['signout'] = 'admin/signout';
+
+
+
