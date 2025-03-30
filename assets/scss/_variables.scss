@@ -1,60 +1,43 @@
 ////////// COLOR SYSTEM //////////
 
-$blue: #5e50f9;
-$indigo: #6610f2;
-$purple: #6a008a;
-$pink: #e91e63;
-$red: #f96868;
-$orange: #f2a654;
-$yellow: #f6e84e;
-$green: #46c35f;
-$teal: #58d8a3;
-$cyan: #57c7d4;
-$black: #000;
-$white: #ffffff;
-$white-smoke: #f2f7f8;
-$violet: #41478a;
-$darkslategray: #2e383e;
-$dodger-blue: #3498db;
+$primary: #ABBDA6;
+$primary-dark: #7D996F;
+$accent: #FFC46B;
+$secondary: #94B3FD;
+$neutral-light: #F8FAF9;
+$neutral-medium: #DDE4DC;
+$text-dark: #1E2D23;
+$text-light: #4F6256;
 
 $colors: (
-  blue: $blue,
-  indigo: $indigo,
-  purple: $purple,
-  pink: $pink,
-  red: $red,
-  orange: $orange,
-  yellow: $yellow,
-  green: $green,
-  teal: $teal,
-  cyan: $cyan,
-  white: $white,
-  gray: #434a54,
-  gray-light: #aab2bd,
-  gray-lighter: #e8eff4,
-  gray-lightest: #e6e9ed,
-  gray-dark: #0f1531,
-  black: #000000,
+  primary: $primary,
+  'primary-dark': $primary-dark,
+  accent: $accent,
+  secondary: $secondary,
+  'neutral-light': $neutral-light,
+  'neutral-medium': $neutral-medium,
+  'text-dark': $text-dark,
+  'text-light': $text-light,
 );
 
 $theme-colors: (
-  primary: #3f50f6,
-  secondary: #d8d8d8,
-  success: #00cccd,
-  info: #198ae3,
-  warning: #ffab2d,
-  danger: #ff3ca6,
-  light: #f8f9fa,
-  dark: #3e4b5b,
+  primary: $primary,
+  'primary-dark': $primary-dark,
+  accent: $accent,
+  secondary: $secondary,
+  'neutral-light': $neutral-light,
+  'neutral-medium': $neutral-medium,
+  'text-dark': $text-dark,
+  'text-light': $text-light,
 );
 
 ////////// COLOR SYSTEM //////////
 
 ////////// COLOR VARIABLES //////////
-$content-bg: #f2f2f2;
+$content-bg: $neutral-light;
 $footer-bg: $content-bg;
-$footer-color: color(dark);
-$border-color: #ebedf2;
+$footer-color: $text-dark;
+$border-color: $neutral-medium;
 ////////// COLOR VARIABLES //////////
 
 ////////// SOCIAL COLORS //////////

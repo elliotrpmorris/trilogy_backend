@@ -33,11 +33,11 @@
     @include badge-inverse-variant($value);
   }
   .badge-#{$color}:not(.badge-light) {
-    color: $white;
+    color: $neutral-light;
     &:hover,
     &:focus,
     &:active {
-      color: $white;
+      color: $neutral-light;
     }
     &:focus,
     &:active {
@@ -49,8 +49,8 @@
     &:hover,
     &:focus,
     &:active {
-      background: theme-gradient-color($color);
-      color: $white;
+      background: $value;
+      color: $neutral-light;
     }
   }
 }

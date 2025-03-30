@@ -1,207 +1,440 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { useState, useEffect, useRef } from "react";
+import { Dialog, Transition } from "@headlessui/react";
+import { Fragment } from "react";
+import { motion } from "framer-motion";
+import "@fontsource/inter/400.css";
+import "@fontsource/inter/500.css";
+import "@fontsource/inter/600.css";
+import "@fontsource/inter/700.css";
+import "@fontsource/manrope/400.css";
+import "@fontsource/manrope/500.css";
+import "@fontsource/manrope/600.css";
+import "@fontsource/manrope/700.css";
 
 export default function Home() {
+  const [isOpen, setIsOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [activeSection, setActiveSection] = useState('home');
+
+  const homeRef = useRef<HTMLDivElement>(null);
+  const aboutRef = useRef<HTMLDivElement>(null);
+  const featuresRef = useRef<HTMLDivElement>(null);
+  const teamRef = useRef<HTMLDivElement>(null);
+  const contactRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+      
+      // Update active section based on scroll position
+      const sections = [
+        { id: 'home', ref: homeRef },
+        { id: 'about', ref: aboutRef },
+        { id: 'features', ref: featuresRef },
+        { id: 'team', ref: teamRef },
+        { id: 'contact', ref: contactRef }
+      ];
+
+      for (const section of sections) {
+        if (section.ref.current) {
+          const rect = section.ref.current.getBoundingClientRect();
+          if (rect.top <= 100 && rect.bottom >= 100) {
+            setActiveSection(section.id);
+            break;
+          }
+        }
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const scrollToSection = (sectionId: string) => {
+    const sectionRefs = {
+      home: homeRef,
+      about: aboutRef,
+      features: featuresRef,
+      team: teamRef,
+      contact: contactRef
+    };
+
+    const section = sectionRefs[sectionId as keyof typeof sectionRefs];
+    if (section?.current) {
+      section.current.scrollIntoView({ behavior: 'smooth' });
+    }
+    setIsOpen(false);
+  };
+
   return (
-    <div className="min-h-screen">
-      {/* Top Navigation */}
-      <header className="bg-white">
-        <div className="container mx-auto px-4 py-2">
-          <div className="flex flex-col md:flex-row items-center justify-between">
-            <div className="text-center md:text-left mb-4 md:mb-0">
-              <p className="italic">Sign up for the Trilogy Health App today for 10% off your first month</p>
+    <div className="min-h-screen bg-white">
+      {/* Navigation */}
+      <nav className={`fixed w-full z-50 transition-all duration-300 ${
+        isScrolled ? "bg-white shadow-sm" : "bg-transparent"
+      }`}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            <Link href="/" className="flex-shrink-0">
+              <Image src="/logo.png" alt="Trilogy Health" width={120} height={40} />
+            </Link>
+            
+            {/* Desktop Navigation */}
+            <div className="hidden md:flex items-center space-x-8">
+              <button 
+                onClick={() => scrollToSection('home')}
+                className={`text-gray-600 hover:text-gray-900 transition-colors ${
+                  activeSection === 'home' ? 'text-blue-600 font-medium' : ''
+                }`}
+              >
+                Home
+              </button>
+              <button 
+                onClick={() => scrollToSection('about')}
+                className={`text-gray-600 hover:text-gray-900 transition-colors ${
+                  activeSection === 'about' ? 'text-blue-600 font-medium' : ''
+                }`}
+              >
+                About
+              </button>
+              <button 
+                onClick={() => scrollToSection('features')}
+                className={`text-gray-600 hover:text-gray-900 transition-colors ${
+                  activeSection === 'features' ? 'text-blue-600 font-medium' : ''
+                }`}
+              >
+                Features
+              </button>
+              <button 
+                onClick={() => scrollToSection('team')}
+                className={`text-gray-600 hover:text-gray-900 transition-colors ${
+                  activeSection === 'team' ? 'text-blue-600 font-medium' : ''
+                }`}
+              >
+                Team
+              </button>
+              <button 
+                onClick={() => scrollToSection('contact')}
+                className={`text-gray-600 hover:text-gray-900 transition-colors ${
+                  activeSection === 'contact' ? 'text-blue-600 font-medium' : ''
+                }`}
+              >
+                Contact
+              </button>
             </div>
-            <div className="w-full md:w-auto">
-              <div className="flex">
-                <input
-                  type="search"
-                  className="form-input w-full rounded-l"
-                  placeholder="Search"
-                />
-                <button className="bg-gray-100 px-4 rounded-r">
-                  <i className="fas fa-search"></i>
-                </button>
+
+            {/* Mobile menu button */}
+            <button
+              className="md:hidden"
+              onClick={() => setIsOpen(true)}
+            >
+              <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        {/* Mobile Navigation */}
+        <Transition appear show={isOpen} as={Fragment}>
+          <Dialog as="div" className="relative z-50" onClose={() => setIsOpen(false)}>
+            <Transition.Child
+              as={Fragment}
+              enter="ease-out duration-300"
+              enterFrom="opacity-0"
+              enterTo="opacity-100"
+              leave="ease-in duration-200"
+              leaveFrom="opacity-100"
+              leaveTo="opacity-0"
+            >
+              <div className="fixed inset-0 bg-black bg-opacity-25" />
+            </Transition.Child>
+
+            <div className="fixed inset-0 overflow-y-auto">
+              <div className="flex min-h-full items-center justify-center p-4 text-center">
+                <Transition.Child
+                  as={Fragment}
+                  enter="ease-out duration-300"
+                  enterFrom="opacity-0 scale-95"
+                  enterTo="opacity-100 scale-100"
+                  leave="ease-in duration-200"
+                  leaveFrom="opacity-100 scale-100"
+                  leaveTo="opacity-0 scale-95"
+                >
+                  <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+                    <div className="flex flex-col space-y-4">
+                      <button 
+                        onClick={() => scrollToSection('home')}
+                        className={`text-left text-gray-600 hover:text-gray-900 transition-colors ${
+                          activeSection === 'home' ? 'text-blue-600 font-medium' : ''
+                        }`}
+                      >
+                        Home
+                      </button>
+                      <button 
+                        onClick={() => scrollToSection('about')}
+                        className={`text-left text-gray-600 hover:text-gray-900 transition-colors ${
+                          activeSection === 'about' ? 'text-blue-600 font-medium' : ''
+                        }`}
+                      >
+                        About
+                      </button>
+                      <button 
+                        onClick={() => scrollToSection('features')}
+                        className={`text-left text-gray-600 hover:text-gray-900 transition-colors ${
+                          activeSection === 'features' ? 'text-blue-600 font-medium' : ''
+                        }`}
+                      >
+                        Features
+                      </button>
+                      <button 
+                        onClick={() => scrollToSection('team')}
+                        className={`text-left text-gray-600 hover:text-gray-900 transition-colors ${
+                          activeSection === 'team' ? 'text-blue-600 font-medium' : ''
+                        }`}
+                      >
+                        Team
+                      </button>
+                      <button 
+                        onClick={() => scrollToSection('contact')}
+                        className={`text-left text-gray-600 hover:text-gray-900 transition-colors ${
+                          activeSection === 'contact' ? 'text-blue-600 font-medium' : ''
+                        }`}
+                      >
+                        Contact
+                      </button>
+                    </div>
+                    <button
+                      className="absolute top-4 right-4"
+                      onClick={() => setIsOpen(false)}
+                    >
+                      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                  </Dialog.Panel>
+                </Transition.Child>
               </div>
             </div>
-          </div>
-        </div>
-        
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex flex-col md:flex-row items-center justify-between">
-            <div className="mb-4 md:mb-0">
-              <Link href="/">
-                <Image src="/logo.png" alt="Trilogy Health" width={150} height={50} />
-              </Link>
-            </div>
-            <div className="flex items-center space-x-4">
-              <button className="text-gray-600 hover:text-gray-900">Login</button>
-              <button className="text-gray-600 hover:text-gray-900">
-                <i className="fas fa-user-circle text-xl"></i>
-              </button>
-              <button className="text-gray-600 hover:text-gray-900 relative">
-                <i className="fas fa-shopping-bag text-xl"></i>
-                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                  4
-                </span>
-              </button>
-            </div>
-          </div>
-        </div>
-      </header>
+          </Dialog>
+        </Transition>
+      </nav>
 
       {/* Hero Section */}
-      <section className="bg-gray-50 py-20">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col md:flex-row items-center">
-            <div className="md:w-1/2 mb-10 md:mb-0">
-              <h1 className="text-4xl md:text-5xl font-bold mb-4">
-                TRILOGY <span className="text-blue-600">HEALTH</span>
+      <section ref={homeRef} className="pt-32 pb-16 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div>
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
+                Your Health Journey Starts Here
               </h1>
-              <h2 className="text-xl md:text-2xl mb-6">
-                An expert nutritionist, coach and physiotherapist in your pocket.
-              </h2>
-              <h3 className="text-lg mb-8">Download the app below to get started</h3>
+              <p className="text-xl text-gray-600 mb-8">
+                Expert nutrition, coaching, and physiotherapy guidance all in one app.
+              </p>
               <div className="flex space-x-4">
                 <Image src="/google.png" alt="Google Play" width={150} height={50} />
                 <Image src="/app.png" alt="App Store" width={150} height={50} />
               </div>
             </div>
-            <div className="md:w-1/2">
-              <Image src="/banner-img.png" alt="Banner" width={500} height={500} />
+            <div className="relative">
+              <Image src="/banner-img.png" alt="Banner" width={600} height={600} className="rounded-2xl shadow-xl" />
             </div>
           </div>
         </div>
       </section>
 
       {/* About Section */}
-      <section className="py-20">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto text-center">
-            <Image src="/img-1.png" alt="About" width={600} height={400} className="mx-auto mb-8" />
-            <h2 className="text-3xl font-bold mb-4">WHY TRILOGY HEALTH?</h2>
-            <p className="text-lg mb-8">
-              With over 50 recipes curated by nutritionists, tailored workout plans and injury prevention programmes, 
-              this app will bring together everything you need to achieve and maintain your health and fitness goals.
-            </p>
-            <button className="bg-blue-600 text-white px-8 py-3 rounded-full hover:bg-blue-700">
-              Read More
-            </button>
+      <section ref={aboutRef} className="py-16 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-3xl font-bold text-center text-gray-900 mb-4">About Us</h2>
+          <p className="text-center text-gray-600 mb-12 max-w-2xl mx-auto">
+            Trilogy Health brings together expert nutrition, coaching, and physiotherapy guidance in one comprehensive app. Our mission is to help you achieve your health and fitness goals through personalized, professional support.
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="bg-white p-6 rounded-xl shadow-sm">
+              <h3 className="text-xl font-bold text-gray-900 mb-4">Our Mission</h3>
+              <p className="text-gray-600">
+                To provide accessible, professional health and fitness guidance that helps people transform their lives through proper nutrition, effective training, and injury prevention.
+              </p>
+            </div>
+            <div className="bg-white p-6 rounded-xl shadow-sm">
+              <h3 className="text-xl font-bold text-gray-900 mb-4">Our Vision</h3>
+              <p className="text-gray-600">
+                To become the leading platform for comprehensive health and fitness guidance, making professional expertise accessible to everyone, everywhere.
+              </p>
+            </div>
           </div>
         </div>
       </section>
 
       {/* Features Section */}
-      <section className="bg-gray-50 py-20">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12">
-            EVERYTHING YOU NEED<br />IN ONE APP
-          </h2>
+      <section ref={featuresRef} className="py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">Everything You Need</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="text-center">
-              <Image src="/img-i1.png" alt="Fitness Coach" width={100} height={100} className="mx-auto mb-4" />
-              <h3 className="text-xl font-bold mb-4">Fitness Coach</h3>
-              <p>Build strength, muscle tone and mobility with over 100 exercises and more than 50 workouts.</p>
-            </div>
-            <div className="text-center">
-              <Image src="/img-i2.png" alt="Nutritionist" width={100} height={100} className="mx-auto mb-4" />
-              <h3 className="text-xl font-bold mb-4">Nutritionist</h3>
-              <p>Over 50 simple and effective recipes, that are nutritionally complete and tailored to your goals.</p>
-            </div>
-            <div className="text-center">
-              <Image src="/img-i3.png" alt="Physiotherapist" width={100} height={100} className="mx-auto mb-4" />
-              <h3 className="text-xl font-bold mb-4">Physiotherapist</h3>
-              <p>Targeted injury prevention programming with over 100 exercises for rehabilitation.</p>
-            </div>
-          </div>
-          <div className="text-center mt-12">
-            <button className="bg-blue-600 text-white px-8 py-3 rounded-full hover:bg-blue-700">
-              Learn More
-            </button>
+            {[
+              {
+                image: "/img-i1.png",
+                title: "Fitness Coach",
+                description: "Build strength and mobility with expert-guided workouts."
+              },
+              {
+                image: "/img-i2.png",
+                title: "Nutritionist",
+                description: "Simple, effective recipes tailored to your goals."
+              },
+              {
+                image: "/img-i3.png",
+                title: "Physiotherapist",
+                description: "Prevent injuries and rehabilitate with professional guidance."
+              }
+            ].map((feature, index) => (
+              <div key={feature.title} className="bg-white p-6 rounded-xl shadow-sm">
+                <Image src={feature.image} alt={feature.title} width={80} height={80} className="mb-4" />
+                <h3 className="text-xl font-bold text-gray-900 mb-2">{feature.title}</h3>
+                <p className="text-gray-600">{feature.description}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
       {/* Team Section */}
-      <section className="py-20">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-4">MEET THE TRILOGY HEALTH TEAM</h2>
-          <p className="text-center mb-12">
-            The Trilogy Health experts have collectively helped to transform the lives of 1000's of people.
+      <section ref={teamRef} className="py-16 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-3xl font-bold text-center text-gray-900 mb-4">Meet Our Team</h2>
+          <p className="text-center text-gray-600 mb-12 max-w-2xl mx-auto">
+            Our experts have helped transform thousands of lives through personalized health and fitness guidance.
           </p>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-              <Image src="/img-1.jpg" alt="Luke Stopford" width={400} height={300} />
-              <div className="p-6">
-                <p className="text-blue-600 mb-1">Fitness Coach</p>
-                <h3 className="text-xl font-bold mb-4">LUKE STOPFORD</h3>
-                <p>
-                  Luke was just 16 when he began coaching and since then, has revolutionised fitness with his UKSCA certified Yorkshire based gym - Yorkshire Strength. 
-                  As a British Weightlifting Pathway Coach, Luke has coached everyone from beginners, to some of the UK's best athletes.
-                </p>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {[
+              {
+                image: "/img-1.jpg",
+                role: "Fitness Coach",
+                name: "Luke Stopford",
+                description: "UKSCA certified coach and British Weightlifting Pathway Coach with expertise in strength training and athletic development."
+              },
+              {
+                image: "/img-2.jpg",
+                role: "Nutritionist",
+                name: "Fallon Parker",
+                description: "Registered Sports and Exercise nutritionist helping people transform their lifestyle through proper nutrition."
+              },
+              {
+                image: "/img-3.jpg",
+                role: "Physiotherapist",
+                name: "Dominique",
+                description: "10+ years of experience in injury prevention and management, owner of Unique Physiotherapy."
+              }
+            ].map((member) => (
+              <div key={member.name} className="bg-white rounded-xl shadow-sm overflow-hidden">
+                <div className="relative h-64">
+                  <Image 
+                    src={member.image} 
+                    alt={member.name} 
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+                <div className="p-6">
+                  <p className="text-blue-600 text-sm font-medium mb-1">{member.role}</p>
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">{member.name}</h3>
+                  <p className="text-gray-600 text-sm">{member.description}</p>
+                </div>
               </div>
-            </div>
-            <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-              <Image src="/img-2.jpg" alt="Fallon Parker" width={400} height={300} />
-              <div className="p-6">
-                <p className="text-blue-600 mb-1">Nutritionist</p>
-                <h3 className="text-xl font-bold mb-4">FALLON PARKER</h3>
-                <p>
-                  Fallon is a registered Sports and Exercise nutritionist and has helped 100s of people to transform their lifestyle and fuel their body properly. 
-                  Alongside her day job, she is currently completing a Masters of Research in Psychology and Physical Activity.
-                </p>
-              </div>
-            </div>
-            <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-              <Image src="/img-3.jpg" alt="Dominique" width={400} height={300} />
-              <div className="p-6">
-                <p className="text-blue-600 mb-1">Physiotherapist</p>
-                <h3 className="text-xl font-bold mb-4">DOMINIQUE</h3>
-                <p>
-                  Dominique has over 10 years experience as a leading physiotherapist, having worked with thousands of individuals for injury prevention and management. 
-                  Alongside Trilogy Health, she is the owner and head physiotherapist at Unique Physiotherapy.
-                </p>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </section>
 
       {/* Contact Section */}
-      <section className="bg-gray-50 py-20">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div>
-              <h2 className="text-3xl font-bold mb-4">Get in Touch</h2>
-              <p className="mb-4">I'm a paragraph. Click here to add your own text and edit me.</p>
-              <p>
-                Email: info@mysite.com<br />
-                Phone: 123-456-7890
-              </p>
-            </div>
-            <div>
-              <form className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <input type="text" placeholder="First Name" className="form-input w-full" />
-                  <input type="text" placeholder="Last Name" className="form-input w-full" />
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <input type="email" placeholder="Email" className="form-input w-full" />
-                  <input type="text" placeholder="Subject" className="form-input w-full" />
-                </div>
-                <textarea placeholder="Type your message here..." className="form-textarea w-full h-32"></textarea>
-                <button type="submit" className="bg-blue-600 text-white px-8 py-3 rounded-full hover:bg-blue-700">
-                  Submit
-                </button>
-              </form>
+      <section ref={contactRef} className="py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-3xl mx-auto text-center">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">Get Started Today</h2>
+            <p className="text-xl text-gray-600 mb-8">
+              Download the app and begin your journey to better health.
+            </p>
+            <div className="flex justify-center space-x-4">
+              <Image src="/google.png" alt="Google Play" width={150} height={50} />
+              <Image src="/app.png" alt="App Store" width={150} height={50} />
             </div>
           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-white py-8">
-        <div className="container mx-auto px-4 text-center">
-          <p>© 2024 Trilogy Health</p>
+      <footer className="bg-gray-900 text-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div className="col-span-1 md:col-span-2">
+              <Image src="/logo.png" alt="Trilogy Health" width={120} height={40} className="mb-4" />
+              <p className="text-gray-400 mb-4">
+                Your comprehensive health and fitness companion, combining expert nutrition, coaching, and physiotherapy guidance.
+              </p>
+              <div className="flex space-x-4">
+                <a href="#" className="text-gray-400 hover:text-white">
+                  <span className="sr-only">Facebook</span>
+                  <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" />
+                  </svg>
+                </a>
+                <a href="#" className="text-gray-400 hover:text-white">
+                  <span className="sr-only">Instagram</span>
+                  <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12.315 2c2.43 0 2.784.013 3.808.09 1.064.077 1.791.232 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.233.636.388 1.363.465 2.427.048 1.067.09 1.407.09 4.123v.08c0 2.643-.012 2.987-.09 4.043-.077 1.064-.232 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.233-1.363.388-2.427.465-1.067.048-1.407.09-4.123.09h-.08c-2.643 0-2.987-.012-4.043-.09-1.064-.077-1.791-.232-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.233-.636-.388-1.363-.465-2.427-.047-1.024-.09-1.379-.09-3.808v-.63c0-2.43.013-2.784.09-3.808.077-1.064.232-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.45 2.525c.636-.233 1.363-.388 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.466.399.8.748 1.15.35.35.683.566 1.15.748.353.137.882.3 1.857.344 1.054.048 1.37.058 4.041.058h.08c2.597 0 2.917-.01 3.96-.058.976-.045 1.505-.207 1.858-.344.466-.182.8-.398 1.15-.748.35-.35.566-.683.748-1.15.137-.353.3-.882.344-1.857.048-1.055.058-1.37.058-4.041v-.08c0-2.597-.01-2.917-.058-3.96-.045-.976-.207-1.505-.344-1.858a3.097 3.097 0 00-.748-1.15 3.098 3.098 0 00-1.15-.748c-.353-.137-.882-.3-1.857-.344-1.023-.047-1.351-.058-3.807-.058zM12 6.865a5.135 5.135 0 110 10.27 5.135 5.135 0 010-10.27zm0 1.802a3.333 3.333 0 100 6.666 3.333 3.333 0 000-6.666zm5.338-3.205a1.2 1.2 0 110 2.4 1.2 1.2 0 010-2.4z" />
+                  </svg>
+                </a>
+              </div>
+            </div>
+            <div>
+              <h3 className="text-sm font-semibold text-white tracking-wider uppercase mb-4">Quick Links</h3>
+              <ul className="space-y-4">
+                <li>
+                  <a href="#" className="text-gray-400 hover:text-white">About Us</a>
+                </li>
+                <li>
+                  <a href="#" className="text-gray-400 hover:text-white">Features</a>
+                </li>
+                <li>
+                  <a href="#" className="text-gray-400 hover:text-white">Team</a>
+                </li>
+                <li>
+                  <a href="#" className="text-gray-400 hover:text-white">Contact</a>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="text-sm font-semibold text-white tracking-wider uppercase mb-4">Newsletter</h3>
+              <p className="text-gray-400 mb-4">Stay updated with our latest news and updates.</p>
+              <form className="space-y-4">
+                <div>
+                  <label htmlFor="email" className="sr-only">Email address</label>
+                  <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    autoComplete="email"
+                    required
+                    className="w-full px-4 py-2 rounded-lg bg-gray-800 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="Enter your email"
+                  />
+                </div>
+                <button
+                  type="submit"
+                  className="w-full bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-900"
+                >
+                  Subscribe
+                </button>
+              </form>
+            </div>
+          </div>
+          <div className="mt-8 pt-8 border-t border-gray-800 text-center">
+            <p className="text-gray-400">© 2025 Trilogy Health. All rights reserved.</p>
+          </div>
         </div>
       </footer>
     </div>
