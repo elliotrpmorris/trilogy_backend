@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment } from "react";
-import { motion } from "framer-motion";
 import "@fontsource/inter/400.css";
 import "@fontsource/inter/500.css";
 import "@fontsource/inter/600.css";
@@ -291,7 +290,7 @@ export default function Home() {
                 title: "Physiotherapist",
                 description: "Prevent injuries and rehabilitate with professional guidance."
               }
-            ].map((feature, index) => (
+            ].map((feature) => (
               <div key={feature.title} className="bg-white p-6 rounded-xl shadow-sm">
                 <Image src={feature.image} alt={feature.title} width={80} height={80} className="mb-4" />
                 <h3 className="text-xl font-bold text-gray-900 mb-2">{feature.title}</h3>
