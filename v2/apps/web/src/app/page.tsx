@@ -312,19 +312,19 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
               {
-                image: "/img-1.jpg",
+                image: "/Luke.JPG",
                 role: "Fitness Coach",
                 name: "Luke Stopford",
                 description: "UKSCA certified coach and British Weightlifting Pathway Coach with expertise in strength training and athletic development."
               },
               {
-                image: "/img-2.jpg",
+                image: "/Fallon.JPG",
                 role: "Nutritionist",
                 name: "Fallon Parker",
                 description: "Registered Sports and Exercise nutritionist helping people transform their lifestyle through proper nutrition."
               },
               {
-                image: "/img-3.jpg",
+                image: "/Dom.JPG",
                 role: "Physiotherapist",
                 name: "Dominique",
                 description: "10+ years of experience in injury prevention and management, owner of Unique Physiotherapy."
