@@ -96,35 +96,42 @@ export default function AdminDashboard() {
   const dashboardData = stats || placeholderStats;
 
   return (
-    <div>
-      <h1 className="text-3xl font-bold mb-6">Dashboard</h1>
+    <div className="max-w-7xl mx-auto">
+      <h1 className="text-3xl font-bold mb-8 text-gray-800">Dashboard</h1>
       
       {/* Stats Overview */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <div className="bg-white p-6 rounded-lg shadow">
+        <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow border border-gray-100">
           <h2 className="text-lg font-medium text-gray-500">Total Users</h2>
-          <p className="text-3xl font-bold">{dashboardData.totalUsers}</p>
+          <p className="text-3xl font-bold text-gray-900 mt-2">{dashboardData.totalUsers}</p>
+          <div className="w-full h-1 bg-blue-500 mt-4 rounded-full"></div>
         </div>
-        <div className="bg-white p-6 rounded-lg shadow">
+        <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow border border-gray-100">
           <h2 className="text-lg font-medium text-gray-500">Active Users</h2>
-          <p className="text-3xl font-bold">{dashboardData.activeUsers}</p>
+          <p className="text-3xl font-bold text-gray-900 mt-2">{dashboardData.activeUsers}</p>
+          <div className="w-full h-1 bg-green-500 mt-4 rounded-full"></div>
         </div>
-        <div className="bg-white p-6 rounded-lg shadow">
+        <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow border border-gray-100">
           <h2 className="text-lg font-medium text-gray-500">Total Orders</h2>
-          <p className="text-3xl font-bold">{dashboardData.totalOrders}</p>
+          <p className="text-3xl font-bold text-gray-900 mt-2">{dashboardData.totalOrders}</p>
+          <div className="w-full h-1 bg-purple-500 mt-4 rounded-full"></div>
         </div>
-        <div className="bg-white p-6 rounded-lg shadow">
+        <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow border border-gray-100">
           <h2 className="text-lg font-medium text-gray-500">Total Revenue</h2>
-          <p className="text-3xl font-bold">${dashboardData.totalRevenue.toLocaleString()}</p>
+          <p className="text-3xl font-bold text-gray-900 mt-2">£{dashboardData.totalRevenue.toLocaleString()}</p>
+          <div className="w-full h-1 bg-amber-500 mt-4 rounded-full"></div>
         </div>
       </div>
       
       {/* Recent Users */}
-      <div className="bg-white rounded-lg shadow mb-8">
+      <div className="bg-white rounded-xl shadow-md mb-8 border border-gray-100">
         <div className="flex justify-between items-center p-6 border-b">
-          <h2 className="text-xl font-semibold">Recent Users</h2>
-          <Link href="/admin/users" className="text-blue-600 hover:text-blue-800">
+          <h2 className="text-xl font-semibold text-gray-800">Recent Users</h2>
+          <Link href="/admin/users" className="text-blue-600 hover:text-blue-800 font-medium flex items-center">
             View All
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
           </Link>
         </div>
         <div className="overflow-x-auto">
@@ -140,13 +147,13 @@ export default function AdminDashboard() {
             </thead>
             <tbody className="divide-y divide-gray-200">
               {dashboardData.recentUsers.map((user) => (
-                <tr key={user.cust_id}>
+                <tr key={user.cust_id} className="hover:bg-gray-50">
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{user.cust_id}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{user.name}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{user.email_id}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-gray-800">{user.name}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-gray-800">{user.email_id}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{user.registration_date}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm">
-                    <Link href={`/admin/users/${user.cust_id}`} className="text-blue-600 hover:text-blue-800">
+                    <Link href={`/admin/users/${user.cust_id}`} className="text-blue-600 hover:text-blue-800 font-medium">
                       View
                     </Link>
                   </td>
@@ -158,11 +165,14 @@ export default function AdminDashboard() {
       </div>
       
       {/* Recent Orders */}
-      <div className="bg-white rounded-lg shadow">
+      <div className="bg-white rounded-xl shadow-md border border-gray-100">
         <div className="flex justify-between items-center p-6 border-b">
-          <h2 className="text-xl font-semibold">Recent Orders</h2>
-          <Link href="/admin/orders" className="text-blue-600 hover:text-blue-800">
+          <h2 className="text-xl font-semibold text-gray-800">Recent Orders</h2>
+          <Link href="/admin/orders" className="text-blue-600 hover:text-blue-800 font-medium flex items-center">
             View All
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
           </Link>
         </div>
         <div className="overflow-x-auto">
@@ -179,20 +189,20 @@ export default function AdminDashboard() {
             </thead>
             <tbody className="divide-y divide-gray-200">
               {dashboardData.recentOrders.map((order) => (
-                <tr key={order.order_id}>
+                <tr key={order.order_id} className="hover:bg-gray-50">
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{order.order_id}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{order.name}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">${order.amount}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-gray-800">{order.name}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-gray-800">${order.amount}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{order.date}</td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                    <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
                       order.status === 'Completed' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
                     }`}>
                       {order.status}
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm">
-                    <Link href={`/admin/orders/${order.order_id}`} className="text-blue-600 hover:text-blue-800">
+                    <Link href={`/admin/orders/${order.order_id}`} className="text-blue-600 hover:text-blue-800 font-medium">
                       View
                     </Link>
                   </td>
