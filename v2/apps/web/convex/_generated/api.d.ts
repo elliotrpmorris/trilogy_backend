@@ -15,6 +15,7 @@ import type {
 } from "convex/server";
 import type * as auth from "../auth.js";
 import type * as dashboard from "../dashboard.js";
+import type * as meals from "../meals.js";
 import type * as messages from "../messages.js";
 import type * as users from "../users.js";
 import type * as workouts from "../workouts.js";
@@ -30,6 +31,7 @@ import type * as workouts from "../workouts.js";
 declare const fullApi: ApiFromModules<{
   auth: typeof auth;
   dashboard: typeof dashboard;
+  meals: typeof meals;
   messages: typeof messages;
   users: typeof users;
   workouts: typeof workouts;

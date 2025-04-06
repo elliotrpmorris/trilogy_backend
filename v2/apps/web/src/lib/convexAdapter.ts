@@ -239,6 +239,70 @@ const convexAdapter = {
     },
 
     /**
+     * Create a new meal type
+     */
+    createType: async (typeData: any) => {
+      try {
+        const result = await convex.mutation(api.meals.createMealType, typeData);
+        return {
+          success: 1,
+          message: "Meal type created successfully",
+          data: { id: result.id }
+        };
+      } catch (error: any) {
+        return {
+          success: 0,
+          message: error.message || "Failed to create meal type",
+          data: null
+        };
+      }
+    },
+
+    /**
+     * Update an existing meal type
+     */
+    updateType: async (typeId: string, typeData: any) => {
+      try {
+        await convex.mutation(api.meals.updateMealType, {
+          id: typeId,
+          ...typeData
+        });
+        
+        return {
+          success: 1,
+          message: "Meal type updated successfully",
+          data: { id: typeId }
+        };
+      } catch (error: any) {
+        return {
+          success: 0,
+          message: error.message || "Failed to update meal type",
+          data: null
+        };
+      }
+    },
+
+    /**
+     * Delete a meal type
+     */
+    deleteType: async (typeId: string) => {
+      try {
+        await convex.mutation(api.meals.deleteMealType, { id: typeId });
+        return {
+          success: 1,
+          message: "Meal type deleted successfully",
+          data: null
+        };
+      } catch (error: any) {
+        return {
+          success: 0,
+          message: error.message || "Failed to delete meal type",
+          data: null
+        };
+      }
+    },
+
+    /**
      * Get all food types
      */
     getFoodTypes: async () => {

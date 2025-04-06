@@ -2,16 +2,22 @@
 
 import React from 'react';
 import Link from 'next/link';
-
+import { useRouter } from 'next/navigation';
+import { useClerk, useAuth } from "@clerk/nextjs";
 
 export default function AdminLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const router = useRouter();
+  const { signOut } = useClerk();
+  const { isLoaded, userId } = useAuth();
   
+  const handleSignOut = () => {
+    signOut(() => router.push('/'));
+  };
 
-  
 
   return (
     <div className="flex min-h-screen">
@@ -120,9 +126,7 @@ export default function AdminLayout({
             </li>
             <li className="pt-2 border-t border-gray-700">
               <button 
-                onClick={() => {
-                  signOut(() => router.push('/'));
-                }}
+                onClick={handleSignOut}
                 className="w-full text-left block py-2 hover:text-gray-300"
               >
                 Logout

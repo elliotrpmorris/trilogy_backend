@@ -136,7 +136,7 @@ export default function AdminDashboard() {
         {adminUser && (
           <div className="bg-blue-50 p-3 rounded-lg">
             <p className="text-blue-800">
-              Welcome, <span className="font-semibold">{adminUser.name}</span>
+              Welcome, <span className="font-semibold">{adminUser.name}Elliot</span>
             </p>
           </div>
         )}
