@@ -1,4 +1,5 @@
 import { ConvexReactClient } from "convex/react";
+import { ConvexProviderWithClerk } from "convex/react-clerk";
 
 /**
  * Create a Convex client for use in the frontend React application
@@ -40,4 +41,5 @@ export const convexHelper = {
   },
 };
 
+export { ConvexProviderWithClerk };
 export default convex; 

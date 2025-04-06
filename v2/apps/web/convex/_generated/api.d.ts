@@ -15,7 +15,9 @@ import type {
 } from "convex/server";
 import type * as auth from "../auth.js";
 import type * as dashboard from "../dashboard.js";
+import type * as messages from "../messages.js";
 import type * as users from "../users.js";
+import type * as workouts from "../workouts.js";
 
 /**
  * A utility for referencing Convex functions in your app's API.
@@ -28,7 +30,9 @@ import type * as users from "../users.js";
 declare const fullApi: ApiFromModules<{
   auth: typeof auth;
   dashboard: typeof dashboard;
+  messages: typeof messages;
   users: typeof users;
+  workouts: typeof workouts;
 }>;
 export declare const api: FilterApi<
   typeof fullApi,

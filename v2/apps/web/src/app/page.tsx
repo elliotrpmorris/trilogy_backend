@@ -13,11 +13,14 @@ import "@fontsource/manrope/400.css";
 import "@fontsource/manrope/500.css";
 import "@fontsource/manrope/600.css";
 import "@fontsource/manrope/700.css";
+import { SignInButton, UserButton } from "@clerk/clerk-react";
+import { Authenticated, Unauthenticated, useConvexAuth } from "convex/react";
 
 export default function Home() {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
+  const { isAuthenticated, isLoading } = useConvexAuth();
 
   const homeRef = useRef<HTMLDivElement>(null);
   const aboutRef = useRef<HTMLDivElement>(null);
@@ -123,6 +126,26 @@ export default function Home() {
               >
                 Contact
               </button>
+              
+              <Unauthenticated>
+                <div className="bg-[#a2c7ac] text-[#353634] px-4 py-2 rounded-lg font-medium hover:bg-opacity-90 transition-colors" data-testid="signin-button">
+                  <SignInButton mode="modal" />
+                </div>
+              </Unauthenticated>
+              
+              <Authenticated>
+                <div className="flex items-center space-x-4">
+                  <Link 
+                    href="/admin/dashboard" 
+                    className="font-['Inter'] text-gray-600 hover:text-[#353634] transition-colors"
+                  >
+                    Dashboard
+                  </Link>
+                  <div data-testid="logout-button">
+                    <UserButton afterSignOutUrl="/" />
+                  </div>
+                </div>
+              </Authenticated>
             </div>
 
             {/* Mobile menu button */}
@@ -205,6 +228,24 @@ export default function Home() {
                       >
                         Contact
                       </button>
+                      
+                      <Unauthenticated>
+                        <div className="text-left text-[#a2c7ac] hover:text-[#8fb399] font-medium transition-colors mt-2" data-testid="signin-button-mobile">
+                          <SignInButton mode="modal" />
+                        </div>
+                      </Unauthenticated>
+                      
+                      <Authenticated>
+                        <Link 
+                          href="/admin/dashboard" 
+                          className="text-left text-gray-600 hover:text-gray-900 font-medium transition-colors mt-2"
+                        >
+                          Dashboard
+                        </Link>
+                        <div className="mt-2" data-testid="logout-button-mobile">
+                          <UserButton afterSignOutUrl="/" />
+                        </div>
+                      </Authenticated>
                     </div>
                     <button
                       className="absolute top-4 right-4"

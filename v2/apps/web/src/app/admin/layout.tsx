@@ -1,17 +1,18 @@
+'use client';
+
 import React from 'react';
 import Link from 'next/link';
-import { Metadata } from 'next';
 
-export const metadata: Metadata = {
-  title: 'Admin Portal - Trilogy Health',
-  description: 'Admin portal for Trilogy Health fitness platform',
-};
 
 export default function AdminLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  
+
+  
+
   return (
     <div className="flex min-h-screen">
       {/* Sidebar */}
@@ -118,9 +119,14 @@ export default function AdminLayout({
               </ul>
             </li>
             <li className="pt-2 border-t border-gray-700">
-              <Link href="/admin/logout" className="block py-2 hover:text-gray-300">
+              <button 
+                onClick={() => {
+                  signOut(() => router.push('/'));
+                }}
+                className="w-full text-left block py-2 hover:text-gray-300"
+              >
                 Logout
-              </Link>
+              </button>
             </li>
           </ul>
         </nav>

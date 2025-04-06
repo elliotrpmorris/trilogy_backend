@@ -61,26 +61,79 @@ export const loginAdmin = mutation({
  * Get the current admin user
  */
 export const getAdminUser = query({
-  args: {
-    userId: v.optional(v.id("users")),
-  },
-  handler: async (ctx, args) => {
-    if (!args.userId) {
+  args: {},
+  handler: async (ctx) => {
+    // Get the user identity from Clerk
+    const identity = await ctx.auth.getUserIdentity();
+    
+    if (!identity || !identity.email) {
       return null;
     }
-
-    const user = await ctx.db.get(args.userId);
-
+    
+    // Check if this user exists in our database
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_email", (q) => q.eq("email", identity.email as string))
+      .unique();
+    
+    // If the user doesn't exist or is not an admin, return null
     if (!user || user.role !== "admin") {
       return null;
     }
-
+    
     return {
       id: user._id,
       name: user.name,
       email: user.email,
       role: user.role,
     };
+  },
+});
+
+/**
+ * Create or update admin user on first sign-in
+ */
+export const syncAdminUser = mutation({
+  args: {},
+  handler: async (ctx) => {
+    // Get the user identity from Clerk
+    const identity = await ctx.auth.getUserIdentity();
+    
+    if (!identity || !identity.email) {
+      throw new ConvexError({
+        message: "Not authenticated or email missing",
+        code: 401,
+      });
+    }
+    
+    // Try to find the user by email
+    let user = await ctx.db
+      .query("users")
+      .withIndex("by_email", (q) => q.eq("email", identity.email as string))
+      .unique();
+    
+    const userName = identity.name || "";
+    
+    if (user) {
+      // Update existing user with Clerk identity info
+      await ctx.db.patch(user._id, {
+        name: userName,
+        updatedAt: Date.now(),
+      });
+      
+      return { id: user._id, isNew: false };
+    } else {
+      // Create new user
+      const userId = await ctx.db.insert("users", {
+        name: userName,
+        email: identity.email,
+        role: "user", // Default role - can be promoted to admin later
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+      });
+      
+      return { id: userId, isNew: true };
+    }
   },
 });
 

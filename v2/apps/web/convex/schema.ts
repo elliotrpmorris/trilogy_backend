@@ -274,4 +274,15 @@ export default defineSchema({
     createdAt: v.number(),
     updatedAt: v.number(),
   }).index("by_competition", ["competitionId"]),
+
+  // Messages for chat functionality
+  messages: defineTable({
+    author: v.string(),
+    content: v.string(),
+    timestamp: v.number(),
+    recipientId: v.optional(v.id("users")),
+    isRead: v.boolean(),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  }).index("by_author", ["author"]),
 }); 

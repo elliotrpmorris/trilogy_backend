@@ -3,6 +3,10 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import convexAdapter from '@/lib/convexAdapter';
+import { useUser } from '@clerk/clerk-react';
+import { useConvexAuth } from 'convex/react';
+import { useQuery, useMutation } from 'convex/react';
+import { api } from '../../../../convex/_generated/api';
 
 // Types for our dashboard data
 interface DashboardStats {
@@ -27,9 +31,22 @@ interface DashboardStats {
 }
 
 export default function AdminDashboard() {
+  const { isAuthenticated, isLoading: authLoading } = useConvexAuth();
+  const { user } = useUser();
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  
+  // Get and sync admin user
+  const adminUser = useQuery(api.auth.getAdminUser);
+  const syncUser = useMutation(api.auth.syncAdminUser);
+
+  useEffect(() => {
+    // Sync user with Convex when authenticated with Clerk
+    if (isAuthenticated && user) {
+      syncUser();
+    }
+  }, [isAuthenticated, user, syncUser]);
 
   useEffect(() => {
     const fetchDashboardData = async () => {
@@ -55,6 +72,23 @@ export default function AdminDashboard() {
 
     fetchDashboardData();
   }, []);
+
+  if (authLoading) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+        <span className="ml-3">Verifying authentication...</span>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return (
+      <div className="bg-yellow-100 p-4 rounded text-yellow-700 mb-4">
+        Please sign in to access the admin dashboard.
+      </div>
+    );
+  }
 
   if (loading) {
     return (
@@ -97,7 +131,16 @@ export default function AdminDashboard() {
 
   return (
     <div className="max-w-7xl mx-auto">
-      <h1 className="text-3xl font-bold mb-8 text-gray-800">Dashboard</h1>
+      <div className="flex justify-between items-center mb-8">
+        <h1 className="text-3xl font-bold text-gray-800">Dashboard</h1>
+        {adminUser && (
+          <div className="bg-blue-50 p-3 rounded-lg">
+            <p className="text-blue-800">
+              Welcome, <span className="font-semibold">{adminUser.name}</span>
+            </p>
+          </div>
+        )}
+      </div>
       
       {/* Stats Overview */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
