@@ -58,7 +58,7 @@ export default function MealsPage() {
     
     // Update or add new parameters
     Object.entries(params).forEach(([key, value]) => {
-      if (value) {
+      if (value && value !== '') {
         newParams.set(key, value);
       } else {
         newParams.delete(key);
@@ -76,14 +76,16 @@ export default function MealsPage() {
 
   // Handle meal type filter change
   const handleMealTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setFilterMealType(e.target.value);
-    updateQueryParams({ meal_type_id: e.target.value, page: '1' });
+    const value = e.target.value;
+    setFilterMealType(value);
+    updateQueryParams({ meal_type_id: value, page: '1' });
   };
 
   // Handle diet type filter change
   const handleDietTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setFilterDietType(e.target.value);
-    updateQueryParams({ diet_type_id: e.target.value, page: '1' });
+    const value = e.target.value;
+    setFilterDietType(value);
+    updateQueryParams({ diet_type_id: value, page: '1' });
   };
 
   // Handle page change
@@ -135,14 +137,23 @@ export default function MealsPage() {
         setFilterDietType(dietTypeId);
         setPage(currentPage);
         
-        // Fetch meals from Convex via adapter
-        const response = await convexAdapter.meals.getAll({
+        // Prepare query parameters
+        const queryParams: any = {
           page: currentPage,
           per_page: perPage,
-          search: search,
-          meal_type_id: mealTypeId,
-          diet_type_id: dietTypeId
-        });
+          search: search
+        };
+
+        // Only add meal_type_id and diet_type_id if they have values
+        if (mealTypeId) {
+          queryParams.meal_type_id = mealTypeId;
+        }
+        if (dietTypeId) {
+          queryParams.diet_type_id = dietTypeId;
+        }
+        
+        // Fetch meals from Convex via adapter
+        const response = await convexAdapter.meals.getAll(queryParams);
         
         if (response.success) {
           setMeals(response.data.meals);
@@ -236,249 +247,296 @@ export default function MealsPage() {
   const totalPages = Math.ceil(totalMeals > 0 ? totalMeals : 100 / perPage);
 
   return (
-    <div>
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">Meals</h1>
-        <Link href="/admin/meals/create" className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
-          Create New Meal
-        </Link>
-      </div>
-
-      {/* Search and Filter */}
-      <div className="bg-white p-4 rounded-lg shadow mb-6">
-        <div className="flex flex-wrap items-center gap-4">
-          <form onSubmit={handleSearch} className="flex flex-1 gap-2">
-            <input
-              type="text"
-              placeholder="Search by meal name"
-              className="flex-1 px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-            <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-              Search
-            </button>
-          </form>
-          
-          <div className="flex items-center">
-            <label htmlFor="mealTypeFilter" className="mr-2">Meal Type:</label>
-            <select
-              id="mealTypeFilter"
-              className="px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-              value={filterMealType}
-              onChange={handleMealTypeChange}
-            >
-              <option value="">All Types</option>
-              {mealTypesData.map((type) => (
-                <option key={type.id} value={type.id}>{type.name}</option>
-              ))}
-            </select>
+    <div className="min-h-screen bg-gray-50 p-8">
+      <div className="max-w-7xl mx-auto">
+        <div className="flex justify-between items-center mb-8">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900">Meals</h1>
+            <p className="mt-2 text-sm text-gray-500">Manage your meal catalog and nutritional information</p>
           </div>
+          <Link 
+            href="/admin/meals/create" 
+            className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          >
+            <svg className="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
+            </svg>
+            Create New Meal
+          </Link>
+        </div>
 
-          <div className="flex items-center">
-            <label htmlFor="dietTypeFilter" className="mr-2">Diet Type:</label>
-            <select
-              id="dietTypeFilter"
-              className="px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-              value={filterDietType}
-              onChange={handleDietTypeChange}
-            >
-              <option value="">All Diets</option>
-              {dietTypesData.map((type) => (
-                <option key={type.id} value={type.id}>{type.name}</option>
-              ))}
-            </select>
+        {/* Search and Filter */}
+        <div className="bg-white shadow rounded-lg p-6 mb-6">
+          <div className="flex flex-wrap items-center gap-4">
+            <form onSubmit={handleSearch} className="flex flex-1 gap-2">
+              <input
+                type="text"
+                placeholder="Search by meal name"
+                className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+              <button 
+                type="submit" 
+                className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              >
+                Search
+              </button>
+            </form>
+            
+            <div className="flex items-center space-x-4">
+              <div>
+                <label htmlFor="mealTypeFilter" className="block text-sm font-medium text-gray-700 mb-1">
+                  Meal Type
+                </label>
+                <select
+                  id="mealTypeFilter"
+                  className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                  value={filterMealType}
+                  onChange={handleMealTypeChange}
+                >
+                  <option value="">All Types</option>
+                  {mealTypesData.map((type) => (
+                    <option key={type.id} value={type.id}>{type.name}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label htmlFor="dietTypeFilter" className="block text-sm font-medium text-gray-700 mb-1">
+                  Diet Type
+                </label>
+                <select
+                  id="dietTypeFilter"
+                  className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                  value={filterDietType}
+                  onChange={handleDietTypeChange}
+                >
+                  <option value="">All Diets</option>
+                  {dietTypesData.map((type) => (
+                    <option key={type.id} value={type.id}>{type.name}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Error Message */}
-      {error && (
-        <div className="bg-red-100 p-4 rounded text-red-700 mb-4">
-          {error}
-        </div>
-      )}
+        {error && (
+          <div className="mb-6 bg-red-50 border-l-4 border-red-400 p-4">
+            <div className="flex">
+              <div className="flex-shrink-0">
+                <svg className="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                </svg>
+              </div>
+              <div className="ml-3">
+                <p className="text-sm text-red-700">{error}</p>
+              </div>
+            </div>
+          </div>
+        )}
 
-      {/* Meals Grid */}
-      <div className="mb-6">
-        {loading ? (
-          <div className="flex justify-center items-center h-64">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
-          </div>
-        ) : mealsData.length === 0 ? (
-          <div className="bg-white rounded-lg shadow p-8 text-center text-gray-500">
-            <p>No meals found matching your criteria</p>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {mealsData.map((meal) => (
-              <div key={meal.id} className="bg-white rounded-lg shadow overflow-hidden">
-                <div className="h-48 overflow-hidden">
-                  <img 
-                    src={meal.image_url || "https://via.placeholder.com/300x200?text=No+Image"} 
-                    alt={meal.name} 
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <div className="p-4">
-                  <div className="flex justify-between items-start mb-2">
-                    <h2 className="text-xl font-semibold">{meal.name}</h2>
-                    <span className={`px-2 py-1 text-xs rounded-full ${
-                      meal.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                    }`}>
-                      {meal.status === 'active' ? 'Active' : 'Inactive'}
-                    </span>
+        {/* Meals Grid */}
+        <div className="mb-6">
+          {loading ? (
+            <div className="flex justify-center items-center h-64">
+              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
+            </div>
+          ) : mealsData.length === 0 ? (
+            <div className="bg-white shadow rounded-lg p-8 text-center">
+              <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <h3 className="mt-2 text-sm font-medium text-gray-900">No meals found</h3>
+              <p className="mt-1 text-sm text-gray-500">Try adjusting your search or filter criteria</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {mealsData.map((meal) => (
+                <div key={meal.id} className="bg-white shadow rounded-lg overflow-hidden">
+                  <div className="h-48 overflow-hidden">
+                    <img 
+                      src={meal.image_url || "https://via.placeholder.com/300x200?text=No+Image"} 
+                      alt={meal.name} 
+                      className="w-full h-full object-cover"
+                    />
                   </div>
-                  <div className="text-sm text-gray-600 mb-2">
-                    <span className="mr-2 bg-blue-100 text-blue-800 px-2 py-1 rounded-full">{meal.meal_type_name}</span>
-                    <span className="bg-purple-100 text-purple-800 px-2 py-1 rounded-full">{meal.diet_type_name}</span>
-                  </div>
-                  <div className="flex justify-between text-sm text-gray-600 mb-4">
-                    <span>{meal.calories} cal</span>
-                    <span>P: {meal.protein}g</span>
-                    <span>C: {meal.carbs}g</span>
-                    <span>F: {meal.fat}g</span>
-                  </div>
-                  <div className="flex justify-between mt-4">
-                    <Link href={`/admin/meals/${meal.id}`} className="text-blue-600 hover:text-blue-800">
-                      View Details
-                    </Link>
-                    <div className="flex space-x-3">
-                      <button 
-                        onClick={() => handleDuplicateMeal(meal.id)}
-                        className="text-gray-600 hover:text-gray-800"
+                  <div className="p-4">
+                    <div className="flex justify-between items-start mb-2">
+                      <h2 className="text-lg font-medium text-gray-900">{meal.name}</h2>
+                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                        meal.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                      }`}>
+                        {meal.status === 'active' ? 'Active' : 'Inactive'}
+                      </span>
+                    </div>
+                    <div className="flex flex-wrap gap-2 mb-3">
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                        {meal.meal_type_name}
+                      </span>
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+                        {meal.diet_type_name}
+                      </span>
+                    </div>
+                    <div className="grid grid-cols-4 gap-2 text-sm text-gray-600 mb-4">
+                      <div className="text-center">
+                        <div className="font-medium">{meal.calories}</div>
+                        <div className="text-xs text-gray-500">cal</div>
+                      </div>
+                      <div className="text-center">
+                        <div className="font-medium">{meal.protein}g</div>
+                        <div className="text-xs text-gray-500">protein</div>
+                      </div>
+                      <div className="text-center">
+                        <div className="font-medium">{meal.carbs}g</div>
+                        <div className="text-xs text-gray-500">carbs</div>
+                      </div>
+                      <div className="text-center">
+                        <div className="font-medium">{meal.fat}g</div>
+                        <div className="text-xs text-gray-500">fat</div>
+                      </div>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <Link 
+                        href={`/admin/meals/${meal.id}`} 
+                        className="text-sm font-medium text-indigo-600 hover:text-indigo-500"
                       >
-                        Duplicate
-                      </button>
-                      <Link href={`/admin/meals/edit/${meal.id}`} className="text-green-600 hover:text-green-800">
-                        Edit
+                        View Details
                       </Link>
-                      <button 
-                        onClick={() => handleDeleteMeal(meal.id)}
-                        className="text-red-600 hover:text-red-800"
-                      >
-                        Delete
-                      </button>
+                      <div className="flex space-x-3">
+                        <button 
+                          onClick={() => handleDuplicateMeal(meal.id)}
+                          className="text-gray-600 hover:text-gray-900"
+                        >
+                          <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M7 9a2 2 0 012-2h6a2 2 0 012 2v6a2 2 0 01-2 2H9a2 2 0 01-2-2V9z" />
+                            <path d="M5 3a2 2 0 00-2 2v6a2 2 0 002 2V5h8a2 2 0 00-2-2H5z" />
+                          </svg>
+                        </button>
+                        <Link 
+                          href={`/admin/meals/edit/${meal.id}`} 
+                          className="text-indigo-600 hover:text-indigo-900"
+                        >
+                          <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+                          </svg>
+                        </Link>
+                        <button 
+                          onClick={() => handleDeleteMeal(meal.id)}
+                          className="text-red-600 hover:text-red-900"
+                        >
+                          <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                            <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
+                          </svg>
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-
-      {/* Pagination */}
-      <div className="flex items-center justify-between bg-white p-4 rounded-lg shadow">
-        <div className="flex-1 flex justify-between sm:hidden">
-          <button
-            onClick={() => handlePageChange(page - 1)}
-            disabled={page <= 1}
-            className={`relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md ${
-              page <= 1 ? 'bg-gray-100 text-gray-400' : 'bg-white text-gray-700 hover:bg-gray-50'
-            }`}
-          >
-            Previous
-          </button>
-          <button
-            onClick={() => handlePageChange(page + 1)}
-            disabled={page >= totalPages}
-            className={`ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md ${
-              page >= totalPages ? 'bg-gray-100 text-gray-400' : 'bg-white text-gray-700 hover:bg-gray-50'
-            }`}
-          >
-            Next
-          </button>
+              ))}
+            </div>
+          )}
         </div>
-        <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
-          <div>
-            <p className="text-sm text-gray-700">
-              Showing <span className="font-medium">{(page - 1) * perPage + 1}</span> to{' '}
-              <span className="font-medium">{Math.min(page * perPage, totalMeals || 100)}</span> of{' '}
-              <span className="font-medium">{totalMeals || 100}</span> results
-            </p>
-          </div>
-          <div>
-            <nav className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+
+        {/* Pagination */}
+        <div className="bg-white shadow rounded-lg p-4">
+          <div className="flex items-center justify-between">
+            <div className="flex-1 flex justify-between sm:hidden">
               <button
                 onClick={() => handlePageChange(page - 1)}
                 disabled={page <= 1}
-                className={`relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 text-sm font-medium ${
-                  page <= 1 ? 'bg-gray-100 text-gray-400' : 'bg-white text-gray-500 hover:bg-gray-50'
+                className={`relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md ${
+                  page <= 1 ? 'bg-gray-100 text-gray-400' : 'bg-white text-gray-700 hover:bg-gray-50'
                 }`}
               >
-                <span className="sr-only">Previous</span>
-                <span>←</span>
+                Previous
               </button>
-              
-              {/* Page numbers */}
-              {[...Array(totalPages > 0 ? totalPages : 10)].map((_, i) => {
-                // Show 5 page buttons max
-                if (totalPages > 7) {
-                  // Always show first, last, and current page
-                  // For others, show 2 before and 2 after current page
-                  const pageNum = i + 1;
-                  if (
-                    pageNum === 1 ||
-                    pageNum === totalPages ||
-                    (pageNum >= page - 2 && pageNum <= page + 2)
-                  ) {
-                    return (
-                      <button
-                        key={i}
-                        onClick={() => handlePageChange(pageNum)}
-                        className={`relative inline-flex items-center px-4 py-2 border text-sm font-medium ${
-                          page === pageNum
-                            ? 'z-10 bg-blue-50 border-blue-500 text-blue-600'
-                            : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50'
-                        }`}
-                      >
-                        {pageNum}
-                      </button>
-                    );
-                  } else if (
-                    (pageNum === page - 3 && pageNum > 1) ||
-                    (pageNum === page + 3 && pageNum < totalPages)
-                  ) {
-                    return (
-                      <span
-                        key={i}
-                        className="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-gray-700"
-                      >
-                        ...
-                      </span>
-                    );
-                  }
-                  return null;
-                }
-                
-                // Show all pages if total pages <= 7
-                return (
-                  <button
-                    key={i}
-                    onClick={() => handlePageChange(i + 1)}
-                    className={`relative inline-flex items-center px-4 py-2 border text-sm font-medium ${
-                      page === i + 1
-                        ? 'z-10 bg-blue-50 border-blue-500 text-blue-600'
-                        : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50'
-                    }`}
-                  >
-                    {i + 1}
-                  </button>
-                );
-              })}
-              
               <button
                 onClick={() => handlePageChange(page + 1)}
                 disabled={page >= totalPages}
-                className={`relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 text-sm font-medium ${
-                  page >= totalPages ? 'bg-gray-100 text-gray-400' : 'bg-white text-gray-500 hover:bg-gray-50'
+                className={`ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md ${
+                  page >= totalPages ? 'bg-gray-100 text-gray-400' : 'bg-white text-gray-700 hover:bg-gray-50'
                 }`}
               >
-                <span className="sr-only">Next</span>
-                <span>→</span>
+                Next
               </button>
-            </nav>
+            </div>
+            <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+              <div>
+                <p className="text-sm text-gray-700">
+                  Showing <span className="font-medium">{(page - 1) * perPage + 1}</span> to{' '}
+                  <span className="font-medium">{Math.min(page * perPage, totalMeals || 100)}</span> of{' '}
+                  <span className="font-medium">{totalMeals || 100}</span> results
+                </p>
+              </div>
+              <div>
+                <nav className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                  <button
+                    onClick={() => handlePageChange(page - 1)}
+                    disabled={page <= 1}
+                    className={`relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 text-sm font-medium ${
+                      page <= 1 ? 'bg-gray-100 text-gray-400' : 'bg-white text-gray-500 hover:bg-gray-50'
+                    }`}
+                  >
+                    <span className="sr-only">Previous</span>
+                    <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                  </button>
+                  
+                  {/* Page numbers */}
+                  {[...Array(totalPages > 0 ? totalPages : 10)].map((_, i) => {
+                    const pageNum = i + 1;
+                    if (
+                      pageNum === 1 ||
+                      pageNum === totalPages ||
+                      (pageNum >= page - 2 && pageNum <= page + 2)
+                    ) {
+                      return (
+                        <button
+                          key={i}
+                          onClick={() => handlePageChange(pageNum)}
+                          className={`relative inline-flex items-center px-4 py-2 border text-sm font-medium ${
+                            page === pageNum
+                              ? 'z-10 bg-indigo-50 border-indigo-500 text-indigo-600'
+                              : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50'
+                          }`}
+                        >
+                          {pageNum}
+                        </button>
+                      );
+                    } else if (
+                      (pageNum === page - 3 && pageNum > 1) ||
+                      (pageNum === page + 3 && pageNum < totalPages)
+                    ) {
+                      return (
+                        <span
+                          key={i}
+                          className="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-gray-700"
+                        >
+                          ...
+                        </span>
+                      );
+                    }
+                    return null;
+                  })}
+                  
+                  <button
+                    onClick={() => handlePageChange(page + 1)}
+                    disabled={page >= totalPages}
+                    className={`relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 text-sm font-medium ${
+                      page >= totalPages ? 'bg-gray-100 text-gray-400' : 'bg-white text-gray-500 hover:bg-gray-50'
+                    }`}
+                  >
+                    <span className="sr-only">Next</span>
+                    <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
+                    </svg>
+                  </button>
+                </nav>
+              </div>
+            </div>
           </div>
         </div>
       </div>
