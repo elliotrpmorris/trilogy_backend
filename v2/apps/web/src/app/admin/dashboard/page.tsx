@@ -129,6 +129,7 @@ export default function AdminDashboard() {
   // Use placeholder data if API data is not available
   const dashboardData = stats || placeholderStats;
 
+  
   return (
     <div className="max-w-7xl mx-auto">
       <div className="flex justify-between items-center mb-8">

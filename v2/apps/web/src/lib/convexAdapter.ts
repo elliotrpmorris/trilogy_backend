@@ -457,6 +457,133 @@ const convexAdapter = {
           data: null
         };
       }
+    },
+
+    /**
+     * Get all nutrition types
+     */
+    getNutritionTypes: async () => {
+      try {
+        const data = await convex.query(api.meals.getNutritionTypes, {});
+        return {
+          success: 1,
+          message: "Nutrition types retrieved successfully",
+          data
+        };
+      } catch (error: any) {
+        return {
+          success: 0,
+          message: error.message || "Failed to retrieve nutrition types",
+          data: null
+        };
+      }
+    },
+
+    /**
+     * Create a new nutrition type
+     */
+    createNutritionType: async (typeData: any) => {
+      try {
+        const result = await convex.mutation(api.meals.createNutritionType, typeData);
+        return {
+          success: 1,
+          message: "Nutrition type created successfully",
+          data: { id: result.id }
+        };
+      } catch (error: any) {
+        return {
+          success: 0,
+          message: error.message || "Failed to create nutrition type",
+          data: null
+        };
+      }
+    },
+
+    /**
+     * Update an existing nutrition type
+     */
+    updateNutritionType: async (typeId: string, typeData: any) => {
+      try {
+        await convex.mutation(api.meals.updateNutritionType, {
+          id: typeId,
+          ...typeData
+        });
+        
+        return {
+          success: 1,
+          message: "Nutrition type updated successfully",
+          data: { id: typeId }
+        };
+      } catch (error: any) {
+        return {
+          success: 0,
+          message: error.message || "Failed to update nutrition type",
+          data: null
+        };
+      }
+    },
+
+    /**
+     * Delete a nutrition type
+     */
+    deleteNutritionType: async (typeId: string) => {
+      try {
+        await convex.mutation(api.meals.deleteNutritionType, { id: typeId });
+        return {
+          success: 1,
+          message: "Nutrition type deleted successfully",
+          data: null
+        };
+      } catch (error: any) {
+        return {
+          success: 0,
+          message: error.message || "Failed to delete nutrition type",
+          data: null
+        };
+      }
+    },
+
+    /**
+     * Get nutrition information for a meal
+     */
+    getMealNutrition: async (mealId: string) => {
+      try {
+        const data = await convex.query(api.meals.getMealNutrition, { mealId });
+        return {
+          success: 1,
+          message: "Meal nutrition retrieved successfully",
+          data
+        };
+      } catch (error: any) {
+        return {
+          success: 0,
+          message: error.message || "Failed to retrieve meal nutrition",
+          data: null
+        };
+      }
+    },
+
+    /**
+     * Update nutrition information for a meal
+     */
+    updateMealNutrition: async (mealId: string, nutritionData: any) => {
+      try {
+        await convex.mutation(api.meals.updateMealNutrition, { 
+          mealId,
+          nutritionData 
+        });
+        return {
+          success: 1,
+          message: "Meal nutrition updated successfully",
+          data: null
+        };
+      } catch (error: any) {
+        return {
+          success: 0,
+          message: error.message || "Failed to update meal nutrition",
+          data: null
+        };
+      }
     }
   },
 

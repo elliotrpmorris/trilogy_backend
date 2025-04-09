@@ -21,6 +21,8 @@
   - Meal type management page implemented
   - Diet type management page implemented
   - Food type management page implemented
+  - Nutrition type management page implemented
+  - Meal nutrition management page implemented
 - Workout management functions in Convex backend:
   - Workout levels, types, and equipment management
   - Exercise management (CRUD) with filtering
@@ -32,8 +34,9 @@
 
 ## Tasks To Do ⏳
 - Connect meal type management backend APIs:
-  - Implement CRUD operations in Convex backend for meal types/diet types/food types
+  - Implement CRUD operations in Convex backend for meal types/diet types/food types/nutrition types
   - Connect UI to backend APIs
+  - Implement meal nutrition CRUD operations in backend
 
 - Workout management UI:
   - Workout listing page
