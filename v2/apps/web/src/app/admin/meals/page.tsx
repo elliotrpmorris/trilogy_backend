@@ -53,12 +53,12 @@ export default function MealsPage() {
   const [filterDietType, setFilterDietType] = useState('');
 
   // Update query parameters when filters change
-  const updateQueryParams = (params: Record<string, string>) => {
+  const updateQueryParams = (params: Record<string, string | undefined>) => {
     const newParams = new URLSearchParams(searchParams);
     
     // Update or add new parameters
     Object.entries(params).forEach(([key, value]) => {
-      if (value && value !== '') {
+      if (value) {
         newParams.set(key, value);
       } else {
         newParams.delete(key);
@@ -78,14 +78,14 @@ export default function MealsPage() {
   const handleMealTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value;
     setFilterMealType(value);
-    updateQueryParams({ meal_type_id: value, page: '1' });
+    updateQueryParams({ meal_type_id: value || undefined, page: '1' });
   };
 
   // Handle diet type filter change
   const handleDietTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value;
     setFilterDietType(value);
-    updateQueryParams({ diet_type_id: value, page: '1' });
+    updateQueryParams({ diet_type_id: value || undefined, page: '1' });
   };
 
   // Handle page change
@@ -93,30 +93,6 @@ export default function MealsPage() {
     setPage(newPage);
     updateQueryParams({ page: newPage.toString() });
   };
-
-  // Fetch meal types and diet types on component mount
-  useEffect(() => {
-    const fetchFilters = async () => {
-      try {
-        const [mealTypesResponse, dietTypesResponse] = await Promise.all([
-          convexAdapter.meals.getMealTypes(),
-          convexAdapter.meals.getDietTypes()
-        ]);
-        
-        if (mealTypesResponse.success) {
-          setMealTypes(mealTypesResponse.data);
-        }
-        
-        if (dietTypesResponse.success) {
-          setDietTypes(dietTypesResponse.data);
-        }
-      } catch (err) {
-        console.error('Error fetching filters:', err);
-      }
-    };
-
-    fetchFilters();
-  }, []);
 
   // Fetch meals when filters or pagination changes
   useEffect(() => {
@@ -144,11 +120,11 @@ export default function MealsPage() {
           search: search
         };
 
-        // Only add meal_type_id and diet_type_id if they have values
-        if (mealTypeId) {
+        // Only add meal_type_id and diet_type_id if they have valid values
+        if (mealTypeId && mealTypeId !== '') {
           queryParams.meal_type_id = mealTypeId;
         }
-        if (dietTypeId) {
+        if (dietTypeId && dietTypeId !== '') {
           queryParams.diet_type_id = dietTypeId;
         }
         
@@ -171,6 +147,30 @@ export default function MealsPage() {
 
     fetchMeals();
   }, [searchParams, perPage]);
+
+  // Fetch meal types and diet types
+  useEffect(() => {
+    const fetchTypes = async () => {
+      try {
+        const [mealTypesResponse, dietTypesResponse] = await Promise.all([
+          convexAdapter.meals.getTypes(),
+          convexAdapter.meals.getDietTypes()
+        ]);
+        
+        if (mealTypesResponse.success) {
+          setMealTypes(mealTypesResponse.data);
+        }
+        
+        if (dietTypesResponse.success) {
+          setDietTypes(dietTypesResponse.data);
+        }
+      } catch (err) {
+        console.error('Error fetching types:', err);
+      }
+    };
+
+    fetchTypes();
+  }, []);
 
   // Handle meal deletion
   const handleDeleteMeal = async (id: string) => {
@@ -291,13 +291,15 @@ export default function MealsPage() {
                 </label>
                 <select
                   id="mealTypeFilter"
-                  className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                  className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm bg-white text-gray-900"
                   value={filterMealType}
                   onChange={handleMealTypeChange}
                 >
-                  <option value="">All Types</option>
+                  <option value="" className="text-gray-500">All Types</option>
                   {mealTypesData.map((type) => (
-                    <option key={type.id} value={type.id}>{type.name}</option>
+                    <option key={type.id} value={type.id} className="text-gray-900">
+                      {type.name}
+                    </option>
                   ))}
                 </select>
               </div>
@@ -308,13 +310,15 @@ export default function MealsPage() {
                 </label>
                 <select
                   id="dietTypeFilter"
-                  className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                  className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm bg-white text-gray-900"
                   value={filterDietType}
                   onChange={handleDietTypeChange}
                 >
-                  <option value="">All Diets</option>
+                  <option value="" className="text-gray-500">All Diets</option>
                   {dietTypesData.map((type) => (
-                    <option key={type.id} value={type.id}>{type.name}</option>
+                    <option key={type.id} value={type.id} className="text-gray-900">
+                      {type.name}
+                    </option>
                   ))}
                 </select>
               </div>

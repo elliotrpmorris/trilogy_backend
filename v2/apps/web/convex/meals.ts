@@ -142,8 +142,8 @@ export const getMeals = query({
     page: v.optional(v.number()),
     per_page: v.optional(v.number()),
     search: v.optional(v.string()),
-    meal_type_id: v.optional(v.id("mealTypes")),
-    diet_type_id: v.optional(v.id("dietTypes")),
+    meal_type_id: v.optional(v.string()),
+    diet_type_id: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     const { page = 1, per_page = 10, search, meal_type_id, diet_type_id } = args;
@@ -155,7 +155,7 @@ export const getMeals = query({
     if (meal_type_id) {
       mealsQuery = ctx.db
         .query("meals")
-        .withIndex("by_meal_type", (q) => q.eq("mealTypeId", meal_type_id));
+        .withIndex("by_meal_type", (q) => q.eq("mealTypeId", meal_type_id as Id<"mealTypes">));
     } else {
       // No meal type filter
       mealsQuery = ctx.db.query("meals");

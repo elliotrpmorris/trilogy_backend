@@ -20,6 +20,15 @@ export default defineSchema({
     status: v.optional(v.union(v.literal("active"), v.literal("inactive"))),
   }).index("by_email", ["email"]),
 
+  userPreferences: defineTable({
+    userId: v.id("users"),
+    theme: v.union(v.literal("light"), v.literal("dark")),
+    notifications: v.boolean(),
+    language: v.string(),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  }).index("by_user", ["userId"]),
+
   // Health data
   allergies: defineTable({
     name: v.string(),
@@ -194,6 +203,41 @@ export default defineSchema({
     updatedAt: v.number(),
   }).index("by_user", ["userId"]),
 
+  // Physio management
+  physioPrograms: defineTable({
+    name: v.string(),
+    description: v.string(),
+    durationWeeks: v.number(),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  }),
+
+  physioExercises: defineTable({
+    title: v.string(),
+    description: v.optional(v.string()),
+    instructions: v.optional(v.string()),
+    image: v.optional(v.string()),
+    video_url: v.optional(v.string()),
+    program_name: v.string(),
+    week_no: v.number(),
+    rep: v.optional(v.number()),
+    sets: v.optional(v.number()),
+    worktime: v.optional(v.number()),
+    equipments: v.optional(v.string()),
+    musclegroup: v.optional(v.string()),
+    status: v.union(v.literal("Y"), v.literal("N")),
+    created_by: v.id("users"),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  }).index("by_program_week", ["program_name", "week_no"]),
+
+  physioWorkoutTypes: defineTable({
+    physio_type: v.string(),
+    status: v.union(v.literal("Y"), v.literal("N")),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  }),
+
   // Payment and orders
   packages: defineTable({
     name: v.string(),
@@ -285,4 +329,14 @@ export default defineSchema({
     createdAt: v.number(),
     updatedAt: v.number(),
   }).index("by_author", ["author"]),
+
+  settings: defineTable({
+    type: v.string(),
+    siteName: v.string(),
+    siteDescription: v.string(),
+    maintenanceMode: v.boolean(),
+    allowUserRegistration: v.boolean(),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  }),
 }); 

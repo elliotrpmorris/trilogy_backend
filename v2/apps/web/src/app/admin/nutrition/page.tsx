@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import convexAdapter from '@/lib/convexAdapter';
+
 import Link from 'next/link';
 
 // Types

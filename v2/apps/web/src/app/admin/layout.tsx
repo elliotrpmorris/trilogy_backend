@@ -40,17 +40,17 @@ export default function AdminLayout({
               </Link>
             </li>
             <li className="pt-2 border-t border-gray-700">
-              <h3 className="font-medium text-gray-400 text-sm">Payment Management</h3>
+              <h3 className="font-medium text-gray-400 text-sm text-gray-500">Payment Management</h3>
               <ul className="space-y-1">
                 <li>
-                  <Link href="/admin/orders" className="block py-1 hover:text-gray-300">
+                  <span className="block py-1 text-gray-500 cursor-not-allowed">
                     Orders
-                  </Link>
+                  </span>
                 </li>
                 <li>
-                  <Link href="/admin/payments" className="block py-1 hover:text-gray-300">
+                  <span className="block py-1 text-gray-500 cursor-not-allowed">
                     Payments
-                  </Link>
+                  </span>
                 </li>
               </ul>
             </li>
@@ -88,38 +88,63 @@ export default function AdminLayout({
               <h3 className="font-medium text-gray-400 text-sm">Workout Management</h3>
               <ul className="space-y-1">
                 <li>
-                  <Link href="/admin/workout/workoutlevel" className="block py-1 hover:text-gray-300">
+                  <Link href="/admin/workoutlevel" className="block py-1 hover:text-gray-300">
                     Workout Level
                   </Link>
                 </li>
                 <li>
-                  <Link href="/admin/workout/workoutcoach" className="block py-1 hover:text-gray-300">
+                  <Link href="/admin/workoutcoach" className="block py-1 hover:text-gray-300">
                     Workout Coach
                   </Link>
                 </li>
                 <li>
-                  <Link href="/admin/workout/routine" className="block py-1 hover:text-gray-300">
-                    Workout Routine
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/admin/workout" className="block py-1 hover:text-gray-300">
-                    Exercises
+                  <Link href="/admin/workouts" className="block py-1 hover:text-gray-300">
+                    Workouts
                   </Link>
                 </li>
               </ul>
             </li>
             <li className="pt-2 border-t border-gray-700">
-              <h3 className="font-medium text-gray-400 text-sm">Marketing</h3>
+              <h3 className="font-medium text-gray-400 text-sm">Physio Management</h3>
               <ul className="space-y-1">
                 <li>
-                  <Link href="/admin/coupon" className="block py-1 hover:text-gray-300">
-                    Coupon Codes
+                  <Link href="/admin/physio/exercises" className="block py-1 hover:text-gray-300">
+                    Physio Exercises
                   </Link>
                 </li>
                 <li>
-                  <Link href="/admin/competition" className="block py-1 hover:text-gray-300">
-                    Competition
+                  <Link href="/admin/physio/programs" className="block py-1 hover:text-gray-300">
+                   Physio Programs
+                  </Link>
+                </li>
+              </ul>
+            </li>
+            <li className="pt-2 border-t border-gray-700">
+              <h3 className="font-medium text-gray-400 text-sm">Analytics</h3>
+              <ul className="space-y-1">
+                <li>
+                  <Link href="/admin/analytics" className="block py-1 hover:text-gray-300">
+                    Analytics Dashboard
+                  </Link>
+                </li>
+              </ul>
+            </li>
+            {/* <li className="pt-2 border-t border-gray-700">
+              <h3 className="font-medium text-gray-400 text-sm">Settings</h3>
+              <ul className="space-y-1">
+                <li>
+                  <Link href="/admin/settings" className="block py-1 hover:text-gray-300">
+                    System Settings
+                  </Link>
+                </li>
+              </ul>
+            </li> */}
+            <li className="pt-2 border-t border-gray-700">
+              <h3 className="font-medium text-gray-400 text-sm">Development</h3>
+              <ul className="space-y-1">
+                <li>
+                  <Link href="/admin/dev/seed" className="block py-1 hover:text-gray-300">
+                    Development Tools
                   </Link>
                 </li>
               </ul>

@@ -1,5 +1,6 @@
 import { anyApi } from "convex/server";
 import { convex } from "./convexClient";
+import { GenericId, v } from "convex/values";
 
 /**
  * Convex Adapter
@@ -353,13 +354,21 @@ const convexAdapter = {
       diet_type_id?: string;
     }) => {
       try {
-        const result = await convex.query(api.meals.getMeals, {
+        // Pass the IDs directly to Convex
+        const queryParams: any = {
           page: params.page,
           per_page: params.per_page,
-          search: params.search,
-          meal_type_id: params.meal_type_id,
-          diet_type_id: params.diet_type_id
-        });
+          search: params.search
+        };
+
+        if (params.meal_type_id) {
+          queryParams.meal_type_id = params.meal_type_id;
+        }
+        if (params.diet_type_id) {
+          queryParams.diet_type_id = params.diet_type_id;
+        }
+
+        const result = await convex.query(api.meals.getMeals, queryParams);
         
         return {
           success: 1,
