@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { useQuery } from 'convex/react';
-import { api } from '@/convex/_generated/api';
+import { api } from '../../../../../convex/_generated/api';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';

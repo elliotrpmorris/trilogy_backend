@@ -160,9 +160,12 @@ export const listPrograms = query({
 });
 
 export const getProgram = query({
-  args: { id: v.id("physioPrograms") },
+  args: { id: v.string() },
   handler: async (ctx, args) => {
-    return await ctx.db.get(args.id);
+    return await ctx.db
+      .query("physioPrograms")
+      .filter((q) => q.eq(q.field("_id"), args.id))
+      .first();
   },
 });
 
@@ -189,16 +192,24 @@ export const createProgram = mutation({
 
 export const updateProgram = mutation({
   args: {
-    id: v.id("physioPrograms"),
+    id: v.string(),
     name: v.optional(v.string()),
     description: v.optional(v.string()),
     durationWeeks: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
     const { id, ...rest } = args;
-    const now = Date.now();
+    const program = await ctx.db
+      .query("physioPrograms")
+      .filter((q) => q.eq(q.field("_id"), id))
+      .first();
+    
+    if (!program) {
+      throw new Error("Program not found");
+    }
 
-    return await ctx.db.patch(id, {
+    const now = Date.now();
+    return await ctx.db.patch(program._id, {
       ...rest,
       updatedAt: now,
     });
@@ -206,19 +217,28 @@ export const updateProgram = mutation({
 });
 
 export const deleteProgram = mutation({
-  args: { id: v.id("physioPrograms") },
+  args: { id: v.string() },
   handler: async (ctx, args) => {
+    const program = await ctx.db
+      .query("physioPrograms")
+      .filter((q) => q.eq(q.field("_id"), args.id))
+      .first();
+    
+    if (!program) {
+      throw new Error("Program not found");
+    }
+
     // First check if there are any exercises associated with this program
     const exercises = await ctx.db
       .query("physioExercises")
-      .filter((q) => q.eq(q.field("program_name"), args.id))
+      .filter((q) => q.eq(q.field("program_name"), program.name))
       .collect();
 
     if (exercises.length > 0) {
       throw new Error("Cannot delete program with associated exercises");
     }
 
-    await ctx.db.delete(args.id);
+    await ctx.db.delete(program._id);
   },
 });
 
@@ -251,9 +271,13 @@ export const duplicateExercise = mutation({
 });
 
 export const getProgramExercises = query({
-  args: { programId: v.id("physioPrograms") },
+  args: { programId: v.string() },
   handler: async (ctx, args) => {
-    const program = await ctx.db.get(args.programId);
+    const program = await ctx.db
+      .query("physioPrograms")
+      .filter((q) => q.eq(q.field("_id"), args.programId))
+      .first();
+    
     if (!program) {
       throw new Error("Program not found");
     }
@@ -267,11 +291,15 @@ export const getProgramExercises = query({
 
 export const getProgramWeekExercises = query({
   args: {
-    programId: v.id("physioPrograms"),
+    programId: v.string(),
     weekNo: v.number(),
   },
   handler: async (ctx, args) => {
-    const program = await ctx.db.get(args.programId);
+    const program = await ctx.db
+      .query("physioPrograms")
+      .filter((q) => q.eq(q.field("_id"), args.programId))
+      .first();
+    
     if (!program) {
       throw new Error("Program not found");
     }

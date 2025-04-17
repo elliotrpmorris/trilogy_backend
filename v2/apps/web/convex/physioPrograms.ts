@@ -1,6 +1,5 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
-import { Id } from "./_generated/dataModel";
 
 export const list = query({
   handler: async (ctx) => {
@@ -12,10 +11,13 @@ export const list = query({
 });
 
 export const get = query({
-  args: { id: v.union(v.id("physioPrograms"), v.literal("skip")) },
+  args: { id: v.union(v.string(), v.literal("skip")) },
   handler: async (ctx, args) => {
     if (args.id === "skip") return null;
-    return await ctx.db.get(args.id as Id<"physioPrograms">);
+    return await ctx.db
+      .query("physioPrograms")
+      .filter((q) => q.eq(q.field("_id"), args.id))
+      .first();
   },
 });
 
@@ -37,14 +39,23 @@ export const create = mutation({
 
 export const update = mutation({
   args: {
-    id: v.id("physioPrograms"),
+    id: v.string(),
     name: v.string(),
     description: v.string(),
     durationWeeks: v.number(),
   },
   handler: async (ctx, args) => {
     const { id, ...data } = args;
-    return await ctx.db.patch(id, {
+    const program = await ctx.db
+      .query("physioPrograms")
+      .filter((q) => q.eq(q.field("_id"), id))
+      .first();
+    
+    if (!program) {
+      throw new Error("Program not found");
+    }
+
+    return await ctx.db.patch(program._id, {
       ...data,
       updatedAt: Date.now(),
     });

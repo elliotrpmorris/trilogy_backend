@@ -22,6 +22,7 @@ import type * as physio from "../physio.js";
 import type * as physioPrograms from "../physioPrograms.js";
 import type * as seed from "../seed.js";
 import type * as settings from "../settings.js";
+import type * as storage from "../storage.js";
 import type * as types_workout from "../types/workout.js";
 import type * as users from "../users.js";
 import type * as workouts from "../workouts.js";
@@ -44,6 +45,7 @@ declare const fullApi: ApiFromModules<{
   physioPrograms: typeof physioPrograms;
   seed: typeof seed;
   settings: typeof settings;
+  storage: typeof storage;
   "types/workout": typeof types_workout;
   users: typeof users;
   workouts: typeof workouts;

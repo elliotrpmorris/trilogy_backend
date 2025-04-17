@@ -205,12 +205,14 @@ export default defineSchema({
 
   // Physio management
   physioPrograms: defineTable({
+    _id: v.string(),
     name: v.string(),
     description: v.string(),
     durationWeeks: v.number(),
     createdAt: v.number(),
     updatedAt: v.number(),
-  }),
+  })
+    .index("by_name", ["name"]),
 
   physioExercises: defineTable({
     title: v.string(),

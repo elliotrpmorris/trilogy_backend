@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import ProgramForm from '../program-form';
+import { ProgramForm } from '@/app/admin/physio/programs/program-form';
 
 export default function NewProgramPage() {
   return (

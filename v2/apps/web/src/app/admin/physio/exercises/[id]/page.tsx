@@ -1,8 +1,6 @@
-'use client';
-
-import React from 'react';
-import { useMutation } from 'convex/react';
+import { useQuery, useMutation } from 'convex/react';
 import { api } from '../../../../../../convex/_generated/api';
+import { Id } from '../../../../../../convex/_generated/dataModel';
 import { ImageUpload } from '@/components/ui/image-upload';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -11,16 +9,18 @@ import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 
-export default function NewExercisePage() {
+export default function EditExercisePage({ params }: { params: { id: string } }) {
   const router = useRouter();
-  const createExercise = useMutation(api.physio.createExercise);
+  const exercise = useQuery(api.physio.getExercise, { id: params.id as Id<'physioExercises'> });
+  const updateExercise = useMutation(api.physio.updateExercise);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     
     try {
-      await createExercise({
+      await updateExercise({
+        id: params.id as Id<'physioExercises'>,
         title: formData.get('title') as string,
         description: formData.get('description') as string,
         instructions: formData.get('instructions') as string,
@@ -36,16 +36,20 @@ export default function NewExercisePage() {
         status: formData.get('status') as 'Y' | 'N',
       });
       
-      toast.success('Exercise created successfully');
+      toast.success('Exercise updated successfully');
       router.push('/admin/physio/exercises');
     } catch (error) {
-      toast.error('Failed to create exercise');
+      toast.error('Failed to update exercise');
     }
   };
 
+  if (!exercise) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div className="container mx-auto py-10">
-      <h1 className="text-3xl font-bold mb-6">New Exercise</h1>
+      <h1 className="text-3xl font-bold mb-6">Edit Exercise</h1>
       
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -54,6 +58,7 @@ export default function NewExercisePage() {
             <Input
               id="title"
               name="title"
+              defaultValue={exercise.title}
               required
             />
           </div>
@@ -63,6 +68,7 @@ export default function NewExercisePage() {
             <Input
               id="program_name"
               name="program_name"
+              defaultValue={exercise.program_name}
               required
             />
           </div>
@@ -73,6 +79,7 @@ export default function NewExercisePage() {
               id="week_no"
               name="week_no"
               type="number"
+              defaultValue={exercise.week_no}
               required
             />
           </div>
@@ -80,6 +87,7 @@ export default function NewExercisePage() {
           <div className="space-y-2">
             <Label htmlFor="image">Image</Label>
             <ImageUpload
+              value={exercise.image}
               onChange={(url) => {
                 const imageInput = document.getElementById('image') as HTMLInputElement;
                 if (imageInput) {
@@ -97,6 +105,7 @@ export default function NewExercisePage() {
               id="image"
               name="image"
               type="hidden"
+              defaultValue={exercise.image}
             />
           </div>
 
@@ -105,6 +114,7 @@ export default function NewExercisePage() {
             <Input
               id="video_url"
               name="video_url"
+              defaultValue={exercise.video_url}
             />
           </div>
 
@@ -114,6 +124,7 @@ export default function NewExercisePage() {
               id="rep"
               name="rep"
               type="number"
+              defaultValue={exercise.rep}
             />
           </div>
 
@@ -123,6 +134,7 @@ export default function NewExercisePage() {
               id="sets"
               name="sets"
               type="number"
+              defaultValue={exercise.sets}
             />
           </div>
 
@@ -132,6 +144,7 @@ export default function NewExercisePage() {
               id="worktime"
               name="worktime"
               type="number"
+              defaultValue={exercise.worktime}
             />
           </div>
 
@@ -140,6 +153,7 @@ export default function NewExercisePage() {
             <Input
               id="equipments"
               name="equipments"
+              defaultValue={exercise.equipments}
             />
           </div>
 
@@ -148,6 +162,7 @@ export default function NewExercisePage() {
             <Input
               id="musclegroup"
               name="musclegroup"
+              defaultValue={exercise.musclegroup}
             />
           </div>
         </div>
@@ -157,6 +172,7 @@ export default function NewExercisePage() {
           <Textarea
             id="description"
             name="description"
+            defaultValue={exercise.description}
             rows={4}
           />
         </div>
@@ -166,6 +182,7 @@ export default function NewExercisePage() {
           <Textarea
             id="instructions"
             name="instructions"
+            defaultValue={exercise.instructions}
             rows={4}
           />
         </div>
@@ -175,7 +192,7 @@ export default function NewExercisePage() {
           <select
             id="status"
             name="status"
-            defaultValue="Y"
+            defaultValue={exercise.status}
             className="w-full p-2 border rounded"
           >
             <option value="Y">Active</option>
@@ -191,7 +208,7 @@ export default function NewExercisePage() {
           >
             Cancel
           </Button>
-          <Button type="submit">Create Exercise</Button>
+          <Button type="submit">Save Changes</Button>
         </div>
       </form>
     </div>

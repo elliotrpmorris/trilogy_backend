@@ -1,0 +1,11 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+
+
+For this project the new web app and mobile app are in the v2 directory we only want to make changes in here, we are re building the platform
+
+The database schema for both apps is here
+[schema.ts](mdc:v2/apps/web/convex/schema.ts)
